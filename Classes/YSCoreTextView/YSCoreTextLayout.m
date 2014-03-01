@@ -43,6 +43,8 @@
                                                 path,
                                                 NULL);
         SAFE_CFRELEASE(framesetter);
+        
+        self.hightlight = [NSMutableArray array];
     }
     return self;
 }

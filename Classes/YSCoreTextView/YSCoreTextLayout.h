@@ -22,7 +22,7 @@
 @property (nonatomic, readonly) CTFrameRef ctframe;
 @property (nonatomic, readonly) CGSize size;
 
-@property (nonatomic) NSArray *hightlight; // YSCoreTextHighlight objects
+@property (nonatomic) NSMutableArray *hightlight; // YSCoreTextHighlight objects
 - (void)drawInContext:(CGContextRef)context;
 
 @end
