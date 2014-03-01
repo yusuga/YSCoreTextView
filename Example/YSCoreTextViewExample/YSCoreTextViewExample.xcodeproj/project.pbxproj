@@ -62,6 +62,7 @@
 		B88D373218C18ECE005B21DF /* YSCoreTextLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSCoreTextLayout.m; sourceTree = "<group>"; };
 		B88D373418C19FDB005B21DF /* YSCoreTextHighlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YSCoreTextHighlight.h; sourceTree = "<group>"; };
 		B88D373518C19FDB005B21DF /* YSCoreTextHighlight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSCoreTextHighlight.m; sourceTree = "<group>"; };
+		B88D378218C1E033005B21DF /* YSCoreTextConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YSCoreTextConstants.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -171,6 +172,7 @@
 				B88D373218C18ECE005B21DF /* YSCoreTextLayout.m */,
 				B88D373418C19FDB005B21DF /* YSCoreTextHighlight.h */,
 				B88D373518C19FDB005B21DF /* YSCoreTextHighlight.m */,
+				B88D378218C1E033005B21DF /* YSCoreTextConstants.h */,
 			);
 			name = YSCoreTextView;
 			path = ../../Classes/YSCoreTextView;
@@ -487,6 +489,7 @@
 				B88D372918C17E53005B21DF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B88D372A18C17E53005B21DF /* Build configuration list for PBXNativeTarget "YSCoreTextViewExampleTests" */ = {
 			isa = XCConfigurationList;
@@ -495,6 +498,7 @@
 				B88D372C18C17E53005B21DF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

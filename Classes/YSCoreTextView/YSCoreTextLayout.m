@@ -8,8 +8,7 @@
 
 #import "YSCoreTextLayout.h"
 #import "YSCoreTextHighlight.h"
-
-#define SAFE_CFRELEASE(p) if(p){CFRelease(p);p=NULL;}
+#import "YSCoreTextConstants.h"
 
 @implementation YSCoreTextLayout
 
