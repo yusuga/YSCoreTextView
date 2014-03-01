@@ -12,17 +12,17 @@
 
 @implementation YSCoreTextLayout
 
-- (id)initWithConstraintWidth:(CGFloat)constraintWidth
+- (id)initWithConstraintSize:(CGSize)constraintSize
                          text:(NSString*)text
                    attributes:(NSDictionary*)attributes
 {
-    return [self initWithConstraintWidth:constraintWidth
-                        attributedString:[[NSAttributedString alloc] initWithString:text
-                                                                         attributes:attributes]];
+    return [self initWithConstraintSize:constraintSize
+                       attributedString:[[NSAttributedString alloc] initWithString:text
+                                                                        attributes:attributes]];
 }
 
-- (id)initWithConstraintWidth:(CGFloat)constraintWidth
-             attributedString:(NSAttributedString*)attributedString
+- (id)initWithConstraintSize:(CGSize)constraintSize
+            attributedString:(NSAttributedString*)attributedString
 {
     if (self = [super init]) {
         _attributedString = attributedString;
@@ -31,7 +31,7 @@
         _size = CTFramesetterSuggestFrameSizeWithConstraints(framesetter,
                                                                    CFRangeMake(0, attributedString.length),
                                                                    NULL,
-                                                                   CGSizeMake(constraintWidth, CGFLOAT_MAX),
+                                                                   constraintSize,
                                                                    NULL);
         
         CGMutablePathRef path = CGPathCreateMutable();

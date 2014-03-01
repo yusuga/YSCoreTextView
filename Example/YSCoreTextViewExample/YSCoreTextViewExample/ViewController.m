@@ -28,14 +28,15 @@
     
     NSString *text = @"Simple drawing of the CoreText.";
     
-    YSCoreTextLayout *layout = [[YSCoreTextLayout alloc] initWithConstraintWidth:self.textView.bounds.size.width
-                                                                            text:text
-                                                                       attributes:@{(id)kCTFontAttributeName : (__bridge id)ctfont,
-                                                                                    (id)kCTForegroundColorAttributeName : (__bridge id)[UIColor blueColor].CGColor}];
+    YSCoreTextLayout *layout = [[YSCoreTextLayout alloc] initWithConstraintSize:CGSizeMake(self.textView.bounds.size.width, CGFLOAT_MAX)
+                                                                           text:text
+                                                                     attributes:@{(id)kCTFontAttributeName : (__bridge id)ctfont,
+                                                                                  (id)kCTForegroundColorAttributeName : (__bridge id)[UIColor blueColor].CGColor}];
     CFRelease(ctfont);
     
-    layout.hightlight = @[[YSCoreTextHighlight highlightWithRange:NSMakeRange(1, 3) color:[[UIColor blueColor] colorWithAlphaComponent:0.4]],
-                          [YSCoreTextHighlight highlightWithRange:NSMakeRange(19, 5) color:[[UIColor yellowColor] colorWithAlphaComponent:0.4]]];
+    [layout.hightlight addObjectsFromArray:@[[YSCoreTextHighlight highlightWithRange:NSMakeRange(1, 3)
+                                                                               color:[[UIColor blueColor] colorWithAlphaComponent:0.4]],
+                                             [YSCoreTextHighlight highlightWithRange:NSMakeRange(19, 5) color:[[UIColor yellowColor] colorWithAlphaComponent:0.4]]]];
     
     CGRect frame = self.textView.frame;
     frame.size = layout.size;

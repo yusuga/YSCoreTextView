@@ -11,11 +11,11 @@
 
 @interface YSCoreTextLayout : NSObject
 
-- (id)initWithConstraintWidth:(CGFloat)constraintWidth
+- (id)initWithConstraintSize:(CGSize)constraintSize
                          text:(NSString*)text
                    attributes:(NSDictionary*)attributes;
 
-- (id)initWithConstraintWidth:(CGFloat)constraintWidth
+- (id)initWithConstraintSize:(CGSize)constraintSize
              attributedString:(NSAttributedString*)attributedString;
 
 @property (nonatomic, readonly) NSAttributedString *attributedString;
