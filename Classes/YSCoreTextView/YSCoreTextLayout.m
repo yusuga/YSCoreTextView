@@ -83,13 +83,13 @@
                                        toIndex:(int)toIndex
                                          color:(UIColor*)color
 {
-	// Set drawing color
-	[color setFill];
-	CGContextRef context = UIGraphicsGetCurrentContext();
-	NSArray *fragmentRects = [self fragmentRectsForGlyphFromIndex:fromIndex toIndex:toIndex];
-	for (NSValue *rectValue in fragmentRects) {
-		CGContextFillRect(context, [rectValue CGRectValue]);
-	}
+    NSArray *fragmentRects = [self fragmentRectsForGlyphFromIndex:fromIndex toIndex:toIndex];
+    
+    [color set];
+    for (NSValue *rectValue in fragmentRects) {
+        UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:[rectValue CGRectValue] cornerRadius:2.];
+        [path fill];
+    }
 }
 
 - (NSArray*)fragmentRectsForGlyphFromIndex:(int)fromIndex
