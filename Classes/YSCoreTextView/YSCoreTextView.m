@@ -14,14 +14,15 @@
 
 @implementation YSCoreTextView
 
-- (void)draw
+- (void)drawWithLayout:(YSCoreTextLayout *)layout
 {
+    _layout = layout;
     [self setNeedsDisplay];
 }
 
 - (void)drawRect:(CGRect)dirtyRect
 {
-    [self.layout drawInContext:UIGraphicsGetCurrentContext()];
+    [_layout drawInContext:UIGraphicsGetCurrentContext()];
 }
 
 @end
