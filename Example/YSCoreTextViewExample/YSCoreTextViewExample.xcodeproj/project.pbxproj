@@ -1,0 +1,502 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B88D36F918C17E53005B21DF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B88D36F818C17E53005B21DF /* Foundation.framework */; };
+		B88D36FB18C17E53005B21DF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B88D36FA18C17E53005B21DF /* CoreGraphics.framework */; };
+		B88D36FD18C17E53005B21DF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B88D36FC18C17E53005B21DF /* UIKit.framework */; };
+		B88D370318C17E53005B21DF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B88D370118C17E53005B21DF /* InfoPlist.strings */; };
+		B88D370518C17E53005B21DF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B88D370418C17E53005B21DF /* main.m */; };
+		B88D370918C17E53005B21DF /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B88D370818C17E53005B21DF /* AppDelegate.m */; };
+		B88D370C18C17E53005B21DF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B88D370A18C17E53005B21DF /* Main.storyboard */; };
+		B88D370F18C17E53005B21DF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B88D370E18C17E53005B21DF /* ViewController.m */; };
+		B88D371118C17E53005B21DF /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B88D371018C17E53005B21DF /* Images.xcassets */; };
+		B88D371818C17E53005B21DF /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B88D371718C17E53005B21DF /* XCTest.framework */; };
+		B88D371918C17E53005B21DF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B88D36F818C17E53005B21DF /* Foundation.framework */; };
+		B88D371A18C17E53005B21DF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B88D36FC18C17E53005B21DF /* UIKit.framework */; };
+		B88D372218C17E53005B21DF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B88D372018C17E53005B21DF /* InfoPlist.strings */; };
+		B88D372418C17E53005B21DF /* YSCoreTextViewExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B88D372318C17E53005B21DF /* YSCoreTextViewExampleTests.m */; };
+		B88D373018C17E8D005B21DF /* YSCoreTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = B88D372F18C17E8D005B21DF /* YSCoreTextView.m */; };
+		B88D373318C18ECE005B21DF /* YSCoreTextLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = B88D373218C18ECE005B21DF /* YSCoreTextLayout.m */; };
+		B88D373618C19FDB005B21DF /* YSCoreTextHighlight.m in Sources */ = {isa = PBXBuildFile; fileRef = B88D373518C19FDB005B21DF /* YSCoreTextHighlight.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B88D371B18C17E53005B21DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B88D36ED18C17E53005B21DF /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B88D36F418C17E53005B21DF;
+			remoteInfo = YSCoreTextViewExample;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		B88D36F518C17E53005B21DF /* YSCoreTextViewExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YSCoreTextViewExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B88D36F818C17E53005B21DF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		B88D36FA18C17E53005B21DF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		B88D36FC18C17E53005B21DF /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		B88D370018C17E53005B21DF /* YSCoreTextViewExample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "YSCoreTextViewExample-Info.plist"; sourceTree = "<group>"; };
+		B88D370218C17E53005B21DF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B88D370418C17E53005B21DF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		B88D370618C17E53005B21DF /* YSCoreTextViewExample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "YSCoreTextViewExample-Prefix.pch"; sourceTree = "<group>"; };
+		B88D370718C17E53005B21DF /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		B88D370818C17E53005B21DF /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		B88D370B18C17E53005B21DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		B88D370D18C17E53005B21DF /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		B88D370E18C17E53005B21DF /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		B88D371018C17E53005B21DF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		B88D371618C17E53005B21DF /* YSCoreTextViewExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = YSCoreTextViewExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B88D371718C17E53005B21DF /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		B88D371F18C17E53005B21DF /* YSCoreTextViewExampleTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "YSCoreTextViewExampleTests-Info.plist"; sourceTree = "<group>"; };
+		B88D372118C17E53005B21DF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B88D372318C17E53005B21DF /* YSCoreTextViewExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = YSCoreTextViewExampleTests.m; sourceTree = "<group>"; };
+		B88D372E18C17E8D005B21DF /* YSCoreTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YSCoreTextView.h; sourceTree = "<group>"; };
+		B88D372F18C17E8D005B21DF /* YSCoreTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSCoreTextView.m; sourceTree = "<group>"; };
+		B88D373118C18ECE005B21DF /* YSCoreTextLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YSCoreTextLayout.h; sourceTree = "<group>"; };
+		B88D373218C18ECE005B21DF /* YSCoreTextLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSCoreTextLayout.m; sourceTree = "<group>"; };
+		B88D373418C19FDB005B21DF /* YSCoreTextHighlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YSCoreTextHighlight.h; sourceTree = "<group>"; };
+		B88D373518C19FDB005B21DF /* YSCoreTextHighlight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSCoreTextHighlight.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B88D36F218C17E53005B21DF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B88D36FB18C17E53005B21DF /* CoreGraphics.framework in Frameworks */,
+				B88D36FD18C17E53005B21DF /* UIKit.framework in Frameworks */,
+				B88D36F918C17E53005B21DF /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B88D371318C17E53005B21DF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B88D371818C17E53005B21DF /* XCTest.framework in Frameworks */,
+				B88D371A18C17E53005B21DF /* UIKit.framework in Frameworks */,
+				B88D371918C17E53005B21DF /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B88D36EC18C17E53005B21DF = {
+			isa = PBXGroup;
+			children = (
+				B88D36FE18C17E53005B21DF /* YSCoreTextViewExample */,
+				B88D372D18C17E7B005B21DF /* YSCoreTextView */,
+				B88D371D18C17E53005B21DF /* YSCoreTextViewExampleTests */,
+				B88D36F718C17E53005B21DF /* Frameworks */,
+				B88D36F618C17E53005B21DF /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B88D36F618C17E53005B21DF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B88D36F518C17E53005B21DF /* YSCoreTextViewExample.app */,
+				B88D371618C17E53005B21DF /* YSCoreTextViewExampleTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B88D36F718C17E53005B21DF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B88D36F818C17E53005B21DF /* Foundation.framework */,
+				B88D36FA18C17E53005B21DF /* CoreGraphics.framework */,
+				B88D36FC18C17E53005B21DF /* UIKit.framework */,
+				B88D371718C17E53005B21DF /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B88D36FE18C17E53005B21DF /* YSCoreTextViewExample */ = {
+			isa = PBXGroup;
+			children = (
+				B88D370718C17E53005B21DF /* AppDelegate.h */,
+				B88D370818C17E53005B21DF /* AppDelegate.m */,
+				B88D370A18C17E53005B21DF /* Main.storyboard */,
+				B88D370D18C17E53005B21DF /* ViewController.h */,
+				B88D370E18C17E53005B21DF /* ViewController.m */,
+				B88D371018C17E53005B21DF /* Images.xcassets */,
+				B88D36FF18C17E53005B21DF /* Supporting Files */,
+			);
+			path = YSCoreTextViewExample;
+			sourceTree = "<group>";
+		};
+		B88D36FF18C17E53005B21DF /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				B88D370018C17E53005B21DF /* YSCoreTextViewExample-Info.plist */,
+				B88D370118C17E53005B21DF /* InfoPlist.strings */,
+				B88D370418C17E53005B21DF /* main.m */,
+				B88D370618C17E53005B21DF /* YSCoreTextViewExample-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		B88D371D18C17E53005B21DF /* YSCoreTextViewExampleTests */ = {
+			isa = PBXGroup;
+			children = (
+				B88D372318C17E53005B21DF /* YSCoreTextViewExampleTests.m */,
+				B88D371E18C17E53005B21DF /* Supporting Files */,
+			);
+			path = YSCoreTextViewExampleTests;
+			sourceTree = "<group>";
+		};
+		B88D371E18C17E53005B21DF /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				B88D371F18C17E53005B21DF /* YSCoreTextViewExampleTests-Info.plist */,
+				B88D372018C17E53005B21DF /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		B88D372D18C17E7B005B21DF /* YSCoreTextView */ = {
+			isa = PBXGroup;
+			children = (
+				B88D372E18C17E8D005B21DF /* YSCoreTextView.h */,
+				B88D372F18C17E8D005B21DF /* YSCoreTextView.m */,
+				B88D373118C18ECE005B21DF /* YSCoreTextLayout.h */,
+				B88D373218C18ECE005B21DF /* YSCoreTextLayout.m */,
+				B88D373418C19FDB005B21DF /* YSCoreTextHighlight.h */,
+				B88D373518C19FDB005B21DF /* YSCoreTextHighlight.m */,
+			);
+			name = YSCoreTextView;
+			path = ../../Classes/YSCoreTextView;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B88D36F418C17E53005B21DF /* YSCoreTextViewExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B88D372718C17E53005B21DF /* Build configuration list for PBXNativeTarget "YSCoreTextViewExample" */;
+			buildPhases = (
+				B88D36F118C17E53005B21DF /* Sources */,
+				B88D36F218C17E53005B21DF /* Frameworks */,
+				B88D36F318C17E53005B21DF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = YSCoreTextViewExample;
+			productName = YSCoreTextViewExample;
+			productReference = B88D36F518C17E53005B21DF /* YSCoreTextViewExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+		B88D371518C17E53005B21DF /* YSCoreTextViewExampleTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B88D372A18C17E53005B21DF /* Build configuration list for PBXNativeTarget "YSCoreTextViewExampleTests" */;
+			buildPhases = (
+				B88D371218C17E53005B21DF /* Sources */,
+				B88D371318C17E53005B21DF /* Frameworks */,
+				B88D371418C17E53005B21DF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B88D371C18C17E53005B21DF /* PBXTargetDependency */,
+			);
+			name = YSCoreTextViewExampleTests;
+			productName = YSCoreTextViewExampleTests;
+			productReference = B88D371618C17E53005B21DF /* YSCoreTextViewExampleTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B88D36ED18C17E53005B21DF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = "Yu Sugawara";
+				TargetAttributes = {
+					B88D371518C17E53005B21DF = {
+						TestTargetID = B88D36F418C17E53005B21DF;
+					};
+				};
+			};
+			buildConfigurationList = B88D36F018C17E53005B21DF /* Build configuration list for PBXProject "YSCoreTextViewExample" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = B88D36EC18C17E53005B21DF;
+			productRefGroup = B88D36F618C17E53005B21DF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B88D36F418C17E53005B21DF /* YSCoreTextViewExample */,
+				B88D371518C17E53005B21DF /* YSCoreTextViewExampleTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B88D36F318C17E53005B21DF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B88D371118C17E53005B21DF /* Images.xcassets in Resources */,
+				B88D370318C17E53005B21DF /* InfoPlist.strings in Resources */,
+				B88D370C18C17E53005B21DF /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B88D371418C17E53005B21DF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B88D372218C17E53005B21DF /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B88D36F118C17E53005B21DF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B88D373618C19FDB005B21DF /* YSCoreTextHighlight.m in Sources */,
+				B88D373018C17E8D005B21DF /* YSCoreTextView.m in Sources */,
+				B88D370F18C17E53005B21DF /* ViewController.m in Sources */,
+				B88D370918C17E53005B21DF /* AppDelegate.m in Sources */,
+				B88D373318C18ECE005B21DF /* YSCoreTextLayout.m in Sources */,
+				B88D370518C17E53005B21DF /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B88D371218C17E53005B21DF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B88D372418C17E53005B21DF /* YSCoreTextViewExampleTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B88D371C18C17E53005B21DF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B88D36F418C17E53005B21DF /* YSCoreTextViewExample */;
+			targetProxy = B88D371B18C17E53005B21DF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		B88D370118C17E53005B21DF /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B88D370218C17E53005B21DF /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		B88D370A18C17E53005B21DF /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B88D370B18C17E53005B21DF /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		B88D372018C17E53005B21DF /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B88D372118C17E53005B21DF /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		B88D372518C17E53005B21DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		B88D372618C17E53005B21DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B88D372818C17E53005B21DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "YSCoreTextViewExample/YSCoreTextViewExample-Prefix.pch";
+				INFOPLIST_FILE = "YSCoreTextViewExample/YSCoreTextViewExample-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		B88D372918C17E53005B21DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "YSCoreTextViewExample/YSCoreTextViewExample-Prefix.pch";
+				INFOPLIST_FILE = "YSCoreTextViewExample/YSCoreTextViewExample-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		B88D372B18C17E53005B21DF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/YSCoreTextViewExample.app/YSCoreTextViewExample";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "YSCoreTextViewExample/YSCoreTextViewExample-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "YSCoreTextViewExampleTests/YSCoreTextViewExampleTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		B88D372C18C17E53005B21DF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/YSCoreTextViewExample.app/YSCoreTextViewExample";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "YSCoreTextViewExample/YSCoreTextViewExample-Prefix.pch";
+				INFOPLIST_FILE = "YSCoreTextViewExampleTests/YSCoreTextViewExampleTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B88D36F018C17E53005B21DF /* Build configuration list for PBXProject "YSCoreTextViewExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B88D372518C17E53005B21DF /* Debug */,
+				B88D372618C17E53005B21DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B88D372718C17E53005B21DF /* Build configuration list for PBXNativeTarget "YSCoreTextViewExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B88D372818C17E53005B21DF /* Debug */,
+				B88D372918C17E53005B21DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		B88D372A18C17E53005B21DF /* Build configuration list for PBXNativeTarget "YSCoreTextViewExampleTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B88D372B18C17E53005B21DF /* Debug */,
+				B88D372C18C17E53005B21DF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B88D36ED18C17E53005B21DF /* Project object */;
+}
