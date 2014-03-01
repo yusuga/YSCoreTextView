@@ -11,12 +11,6 @@
 
 #define SAFE_CFRELEASE(p) if(p){CFRelease(p);p=NULL;}
 
-@interface YSCoreTextLayout ()
-
-@property (nonatomic) CTFrameRef ctframe;
-
-@end
-
 @implementation YSCoreTextLayout
 
 - (id)initWithConstraintWidth:(CGFloat)constraintWidth
@@ -32,6 +26,8 @@
              attributedString:(NSAttributedString*)attributedString
 {
     if (self = [super init]) {
+        _attributedString = attributedString;
+        
         CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)attributedString);
         _size = CTFramesetterSuggestFrameSizeWithConstraints(framesetter,
                                                                    CFRangeMake(0, attributedString.length),
@@ -43,7 +39,7 @@
         CGRect pathRect = CGRectZero;
         pathRect.size = self.size;
         CGPathAddRect(path, NULL, pathRect);
-        self.ctframe = CTFramesetterCreateFrame(framesetter,
+        _ctframe = CTFramesetterCreateFrame(framesetter,
                                                 CFRangeMake(0.f, attributedString.length),
                                                 path,
                                                 NULL);
@@ -54,7 +50,7 @@
 
 - (void)dealloc
 {
-    SAFE_CFRELEASE(self.ctframe);
+    SAFE_CFRELEASE(_ctframe);
 }
 
 - (void)drawInContext:(CGContextRef)context

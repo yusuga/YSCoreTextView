@@ -18,6 +18,8 @@
 - (id)initWithConstraintWidth:(CGFloat)constraintWidth
              attributedString:(NSAttributedString*)attributedString;
 
+@property (nonatomic, readonly) NSAttributedString *attributedString;
+@property (nonatomic, readonly) CTFrameRef ctframe;
 @property (nonatomic, readonly) CGSize size;
 
 @property (nonatomic) NSArray *hightlight; // YSCoreTextHighlight objects

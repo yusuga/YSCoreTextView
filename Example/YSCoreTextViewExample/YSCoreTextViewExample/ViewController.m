@@ -42,7 +42,8 @@
     self.textView.frame = frame;
     NSLog(@"%@", NSStringFromCGRect(self.textView.frame));
     
-    [self.textView drawWithLayout:layout];
+    self.textView.layout = layout;
+    [self.textView draw];
 }
 
 - (void)viewDidAppear:(BOOL)animated

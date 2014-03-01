@@ -10,15 +10,12 @@
 
 @interface YSCoreTextView ()
 
-@property (nonatomic) YSCoreTextLayout *layout;
-
 @end
 
 @implementation YSCoreTextView
 
-- (void)drawWithLayout:(YSCoreTextLayout*)layout
+- (void)draw
 {
-    self.layout = layout;
     [self setNeedsDisplay];
 }
 

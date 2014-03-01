@@ -13,6 +13,8 @@
 
 @interface YSCoreTextView : UIView
 
-- (void)drawWithLayout:(YSCoreTextLayout*)layout;
+@property (nonatomic) YSCoreTextLayout *layout;
+
+- (void)draw;
 
 @end
