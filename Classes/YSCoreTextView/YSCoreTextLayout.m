@@ -57,8 +57,8 @@
 - (void)drawInContext:(CGContextRef)context
 {
     CGContextSaveGState(context);
-    CGContextTranslateCTM(context, 0., self.size.height);
-    CGContextScaleCTM(context, 1., -1.);
+    CGContextTranslateCTM(context, 0.f, self.size.height);
+    CGContextScaleCTM(context, 1.f, -1.f);
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
     CTFrameDraw(self.ctframe, context);
     CGContextRestoreGState(context);
