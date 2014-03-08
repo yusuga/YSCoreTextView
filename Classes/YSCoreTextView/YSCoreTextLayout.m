@@ -64,9 +64,7 @@
     CGContextRestoreGState(context);
     
     for (YSCoreTextHighlight *h in self.hightlight) {
-        [self drawSelectedTextFragmentRectsFromIndex:h.range.location
-                                             toIndex:h.range.location + h.range.length - 1
-                                               color:h.color];
+        [self drawSelectedTextFragmentRectsWithRange:h.range color:h.color];
     }
 }
 
@@ -79,10 +77,15 @@
  BSD-License
 */
 
-- (void)drawSelectedTextFragmentRectsFromIndex:(int)fromIndex
-                                       toIndex:(int)toIndex
+- (void)drawSelectedTextFragmentRectsWithRange:(NSRange)range
                                          color:(UIColor*)color
 {
+    if (range.location == NSNotFound || range.length == 0) {
+        return;
+    }
+    NSUInteger fromIndex = range.location;
+    NSUInteger toIndex = NSMaxRange(range) - 1;
+    
     NSArray *fragmentRects = [self fragmentRectsForGlyphFromIndex:fromIndex toIndex:toIndex];
     
     [color set];
@@ -92,12 +95,9 @@
     }
 }
 
-- (NSArray*)fragmentRectsForGlyphFromIndex:(int)fromIndex
-                                   toIndex:(int)toIndex
+- (NSArray*)fragmentRectsForGlyphFromIndex:(NSUInteger)fromIndex
+                                   toIndex:(NSUInteger)toIndex
 {
-	if (!(fromIndex <= toIndex && fromIndex >=0 && toIndex >=0))
-		return @[];
-	
 	CFArrayRef lines = CTFrameGetLines(self.ctframe);
     CFIndex lineCount = CFArrayGetCount(lines);
     CGPoint lineOrigins[lineCount];
