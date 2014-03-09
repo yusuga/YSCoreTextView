@@ -9,3 +9,13 @@
 #import <Foundation/Foundation.h>
 
 #define SAFE_CFRELEASE(p) if(p){CFRelease(p);p=NULL;}
+
+#if DEBUG
+    #if 1
+        #define LOG_CORE_TEXT(...) NSLog(__VA_ARGS__)
+    #endif
+#endif
+
+#ifndef LOG_CORE_TEXT
+    #define LOG_CORE_TEXT(...)
+#endif

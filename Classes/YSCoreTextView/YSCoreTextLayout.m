@@ -10,6 +10,14 @@
 #import "YSCoreTextHighlight.h"
 #import "YSCoreTextConstants.h"
 
+static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
+#if defined(__LP64__) && __LP64__
+    return ceil(cgfloat);
+#else
+    return ceilf(cgfloat);
+#endif
+}
+
 @implementation YSCoreTextLayout
 
 - (id)initWithConstraintSize:(CGSize)constraintSize
@@ -39,9 +47,9 @@
         pathRect.size = self.size;
         CGPathAddRect(path, NULL, pathRect);
         _ctframe = CTFramesetterCreateFrame(framesetter,
-                                                CFRangeMake(0.f, attributedString.length),
-                                                path,
-                                                NULL);
+                                            CFRangeMake(0.f, attributedString.length),
+                                            path,
+                                            NULL);
         SAFE_CFRELEASE(framesetter);
         
         self.hightlight = [NSMutableArray array];
@@ -71,7 +79,7 @@
 #pragma mark - Draw highlight
 
 /*
- UZTextView https://github.com/sonsongithub/UZTextView
+ Base ideas from UZTextView https://github.com/sonsongithub/UZTextView
  Copyright (c) 2013, sonson
  All rights reserved.
  BSD-License
@@ -87,6 +95,8 @@
     NSUInteger toIndex = NSMaxRange(range) - 1;
     
     NSArray *fragmentRects = [self fragmentRectsForGlyphFromIndex:fromIndex toIndex:toIndex];
+    
+    LOG_CORE_TEXT(@"fragmentRects = %@", fragmentRects);
     
     [color set];
     for (NSValue *rectValue in fragmentRects) {
@@ -106,38 +116,65 @@
 	NSMutableArray *fragmentRects = [NSMutableArray array];
 	
 	NSRange range = NSMakeRange(fromIndex, toIndex - fromIndex + 1);
-	
-	if (range.length <= 0)
-		range.length = 1;
-	
-    for (NSInteger index = 0; index < lineCount; index++) {
-        CGPoint origin = lineOrigins[index];
-        CTLineRef line = CFArrayGetValueAtIndex(lines, index);
+    LOG_CORE_TEXT(@"range = %@", NSStringFromRange(range));
+    for (NSInteger lineIdx = 0; lineIdx < lineCount; lineIdx++) {
+        CGPoint origin = lineOrigins[lineIdx];
+        CTLineRef line = CFArrayGetValueAtIndex(lines, lineIdx);
+        CFArrayRef runs = CTLineGetGlyphRuns(line);
+        CFIndex runCount = CFArrayGetCount(runs);
+        LOG_CORE_TEXT(@"runCount = %@", @(runCount));
         
-		CGRect rect = CGRectZero;
-		CFRange stringRange = CTLineGetStringRange(line);
-		NSRange intersectionRange = NSIntersectionRange(range, NSMakeRange(stringRange.location, stringRange.length));
-		CGFloat ascent;
-        CGFloat descent;
-        CGFloat leading;
-        CGFloat width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
-        
-        CGRect lineRect = CGRectMake(origin.x,
-                                     ceilf(origin.y - descent),
-                                     width,
-                                     ceilf(ascent + descent));
-        lineRect.origin.y = self.size.height - CGRectGetMaxY(lineRect);
-		
-		if (intersectionRange.length > 0) {
-			CGFloat startOffset = CTLineGetOffsetForStringIndex(line, intersectionRange.location, NULL);
-			CGFloat endOffset = CTLineGetOffsetForStringIndex(line, NSMaxRange(intersectionRange), NULL);
-			
-			rect = lineRect;
-			rect.origin.x += startOffset;
-			rect.size.width -= (rect.size.width - endOffset);
-			rect.size.width = rect.size.width - startOffset;
-			[fragmentRects addObject:[NSValue valueWithCGRect:rect]];
-		}
+        CGRect lineRect = CGRectZero;
+        lineRect.origin.x = origin.x;
+        NSUInteger nextMinimumIdx = 0;
+        for (CFIndex runIdx = 0; runIdx < runCount; runIdx++) {
+            CTRunRef run = CFArrayGetValueAtIndex(runs, runIdx);
+            CFRange runRange = CTRunGetStringRange(run);
+            if (runRange.location < nextMinimumIdx) {
+                LOG_CORE_TEXT(@"continue: runRange = %@, nextMinimumIdx = %@", NSStringFromRange(NSMakeRange(runRange.location, runRange.length)), @(nextMinimumIdx));
+                continue;
+            }
+            
+            NSRange intersectionRange = NSIntersectionRange(range, NSMakeRange(runRange.location, runRange.length));
+            CGFloat ascent, descent, leading;
+            double width = CTRunGetTypographicBounds(run,
+                                                     CFRangeMake(0, intersectionRange.length),
+                                                     &ascent,
+                                                     &descent,
+                                                     &leading);
+            LOG_CORE_TEXT(@"runRange = %@, intersectionRange = %@, ascent = %@, descent = %@, leading = %@, width = %@;", NSStringFromRange(NSMakeRange(runRange.location, runRange.length)), NSStringFromRange(intersectionRange), @(ascent), @(descent), @(leading), @(width));
+            
+            if (intersectionRange.length == 0) {
+                if (lineRect.size.width == 0.f) {
+                    lineRect.origin.x += width;
+                }
+            } else if (runRange.location != intersectionRange.location) {
+                double width = CTRunGetTypographicBounds(run,
+                                                         CFRangeMake(0, intersectionRange.location),
+                                                         NULL,
+                                                         NULL,
+                                                         NULL);
+                lineRect.origin.x += width;
+            }
+            
+            if (intersectionRange.length > 0) {
+                if (lineRect.size.width == 0.f) {
+                    lineRect.origin.y = CGFloat_ceil(origin.y - descent);
+                    lineRect.size.height = CGFloat_ceil(ascent + descent);
+                    lineRect.origin.y = self.size.height - CGRectGetMaxY(lineRect);
+                }
+                lineRect.size.width += width;
+                
+                if (nextMinimumIdx == 0) {
+                    nextMinimumIdx = runRange.location + runRange.length;
+                } else {
+                    nextMinimumIdx += runRange.length;
+                }
+            }
+        }
+        if (lineRect.size.width > 0.f) {
+            [fragmentRects addObject:[NSValue valueWithCGRect:lineRect]];
+        }
     }
 	return [NSArray arrayWithArray:fragmentRects];
 }
