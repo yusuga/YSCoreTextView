@@ -24,6 +24,9 @@
 		B88D373018C17E8D005B21DF /* YSCoreTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = B88D372F18C17E8D005B21DF /* YSCoreTextView.m */; };
 		B88D373318C18ECE005B21DF /* YSCoreTextLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = B88D373218C18ECE005B21DF /* YSCoreTextLayout.m */; };
 		B88D373618C19FDB005B21DF /* YSCoreTextHighlight.m in Sources */ = {isa = PBXBuildFile; fileRef = B88D373518C19FDB005B21DF /* YSCoreTextHighlight.m */; };
+		B8BBFAD618CEF55C0082BAEC /* YSCoreTextAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = B8BBFAD518CEF55C0082BAEC /* YSCoreTextAttachment.m */; };
+		B8BBFAD818CEF6960082BAEC /* cat40x40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B8BBFAD718CEF6960082BAEC /* cat40x40@2x.png */; };
+		B8BBFADA18CEF6BD0082BAEC /* cat10x10@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B8BBFAD918CEF6BD0082BAEC /* cat10x10@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +66,10 @@
 		B88D373418C19FDB005B21DF /* YSCoreTextHighlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YSCoreTextHighlight.h; sourceTree = "<group>"; };
 		B88D373518C19FDB005B21DF /* YSCoreTextHighlight.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSCoreTextHighlight.m; sourceTree = "<group>"; };
 		B88D378218C1E033005B21DF /* YSCoreTextConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YSCoreTextConstants.h; sourceTree = "<group>"; };
+		B8BBFAD418CEF55C0082BAEC /* YSCoreTextAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YSCoreTextAttachment.h; sourceTree = "<group>"; };
+		B8BBFAD518CEF55C0082BAEC /* YSCoreTextAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSCoreTextAttachment.m; sourceTree = "<group>"; };
+		B8BBFAD718CEF6960082BAEC /* cat40x40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cat40x40@2x.png"; sourceTree = "<group>"; };
+		B8BBFAD918CEF6BD0082BAEC /* cat10x10@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cat10x10@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +135,8 @@
 				B88D370A18C17E53005B21DF /* Main.storyboard */,
 				B88D370D18C17E53005B21DF /* ViewController.h */,
 				B88D370E18C17E53005B21DF /* ViewController.m */,
+				B8BBFAD918CEF6BD0082BAEC /* cat10x10@2x.png */,
+				B8BBFAD718CEF6960082BAEC /* cat40x40@2x.png */,
 				B88D371018C17E53005B21DF /* Images.xcassets */,
 				B88D36FF18C17E53005B21DF /* Supporting Files */,
 			);
@@ -172,6 +181,8 @@
 				B88D373218C18ECE005B21DF /* YSCoreTextLayout.m */,
 				B88D373418C19FDB005B21DF /* YSCoreTextHighlight.h */,
 				B88D373518C19FDB005B21DF /* YSCoreTextHighlight.m */,
+				B8BBFAD418CEF55C0082BAEC /* YSCoreTextAttachment.h */,
+				B8BBFAD518CEF55C0082BAEC /* YSCoreTextAttachment.m */,
 				B88D378218C1E033005B21DF /* YSCoreTextConstants.h */,
 			);
 			name = YSCoreTextView;
@@ -254,9 +265,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B8BBFAD818CEF6960082BAEC /* cat40x40@2x.png in Resources */,
 				B88D371118C17E53005B21DF /* Images.xcassets in Resources */,
 				B88D370318C17E53005B21DF /* InfoPlist.strings in Resources */,
 				B88D370C18C17E53005B21DF /* Main.storyboard in Resources */,
+				B8BBFADA18CEF6BD0082BAEC /* cat10x10@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -277,6 +290,7 @@
 			files = (
 				B88D373618C19FDB005B21DF /* YSCoreTextHighlight.m in Sources */,
 				B88D373018C17E8D005B21DF /* YSCoreTextView.m in Sources */,
+				B8BBFAD618CEF55C0082BAEC /* YSCoreTextAttachment.m in Sources */,
 				B88D370F18C17E53005B21DF /* ViewController.m in Sources */,
 				B88D370918C17E53005B21DF /* AppDelegate.m in Sources */,
 				B88D373318C18ECE005B21DF /* YSCoreTextLayout.m in Sources */,

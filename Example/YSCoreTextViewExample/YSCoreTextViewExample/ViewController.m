@@ -12,8 +12,11 @@
 @interface ViewController ()
 
 @property (weak, nonatomic) IBOutlet YSCoreTextView *textView;
+@property (weak, nonatomic) IBOutlet YSCoreTextView *textView2;
 
 @end
+
+static NSString * const OBJECT_REPLACEMENT_CHARACTER = @"\uFFFC";
 
 @implementation ViewController
 
@@ -21,6 +24,12 @@
 {
     [super viewDidLoad];
 
+    [self setupTextView];
+    [self setupTextView2];
+}
+
+- (void)setupTextView
+{
     UIFont *font = [UIFont systemFontOfSize:25.];
     CFStringRef fontName = (__bridge CFStringRef)font.fontName;
     CGFloat fontSize = font.pointSize;
@@ -29,9 +38,9 @@
     NSString *text = @"Simple drawing of the CoreText.";
     
     YSCoreTextLayout *layout = [[YSCoreTextLayout alloc] initWithConstraintSize:CGSizeMake(self.textView.bounds.size.width, CGFLOAT_MAX)
-                                                                           text:text
-                                                                     attributes:@{(id)kCTFontAttributeName : (__bridge id)ctfont,
-                                                                                  (id)kCTForegroundColorAttributeName : (__bridge id)[UIColor blueColor].CGColor}];
+                                attributedString:[[NSAttributedString alloc] initWithString:text
+                                                                                 attributes:@{(id)kCTFontAttributeName : (__bridge id)ctfont,
+                                                                                              (id)kCTForegroundColorAttributeName : (__bridge id)[UIColor blueColor].CGColor}]];
     CFRelease(ctfont);
     
     NSRegularExpression *reg = [NSRegularExpression regularExpressionWithPattern:@"(Simple)|(the Core)"
@@ -53,21 +62,40 @@
     }
     layout.hightlight = hightlight;
     
-//    [layout.hightlight addObjectsFromArray:@[[YSCoreTextHighlight highlightWithRange:NSMakeRange(1, 3)
-//                                                                               color:[[UIColor blueColor] colorWithAlphaComponent:0.4]],
-//                                             [YSCoreTextHighlight highlightWithRange:NSMakeRange(19, 5) color:[[UIColor yellowColor] colorWithAlphaComponent:0.4]]]];
-    
-//    [layout.hightlight addObjectsFromArray:@[[YSCoreTextHighlight highlightWithRange:NSMakeRange(1, 3)
-//                                                                               color:[[UIColor blueColor] colorWithAlphaComponent:0.4]]
-//                                             ]];
-
-    
     CGRect frame = self.textView.frame;
     frame.size = layout.size;
     self.textView.frame = frame;
-    NSLog(@"%@", NSStringFromCGRect(self.textView.frame));
-    
     self.textView.layout = layout;
+}
+
+- (void)setupTextView2
+{
+    NSString *str = [@"Simple drawing of the CoreText. Simple drawing of the CoreText. Simple drawing of the CoreText. Simple drawing of the CoreText. " mutableCopy];
+    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:str];
+    
+    UIImage *img;
+//    img = [UIImage imageNamed:@"cat10x10"];
+    img = [UIImage imageNamed:@"cat40x40"];
+    
+    NSRegularExpression *reg = [NSRegularExpression regularExpressionWithPattern:@"[\\w]*( )[\\w]*"
+																		 options:0
+																		   error:nil];
+    NSTextCheckingResult *result;
+    do {
+        result = [reg firstMatchInString:attrStr.string options:0 range:NSMakeRange(0, attrStr.length)];
+        if ([result numberOfRanges] > 1) {
+            NSRange range = [result rangeAtIndex:1];
+            [attrStr replaceCharactersInRange:range withString:@""];
+            [YSCoreTextAttachment insertImage:img
+                            contentEdgeInsets:UIEdgeInsetsMake(0.f, 2.f, 0.f, 2.f)
+                                      atIndex:range.location
+                           toAttributedString:attrStr];
+        }
+    } while (result.numberOfRanges != 0);
+    
+    YSCoreTextLayout *layout = [[YSCoreTextLayout alloc] initWithConstraintSize:self.textView2.bounds.size attributedString:attrStr];
+    
+    self.textView2.layout = layout;
 }
 
 - (void)viewDidAppear:(BOOL)animated
