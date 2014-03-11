@@ -12,10 +12,6 @@
 @interface YSCoreTextLayout : NSObject
 
 - (id)initWithConstraintSize:(CGSize)constraintSize
-                         text:(NSString*)text
-                   attributes:(NSDictionary*)attributes;
-
-- (id)initWithConstraintSize:(CGSize)constraintSize
              attributedString:(NSAttributedString*)attributedString;
 
 @property (nonatomic, readonly) NSAttributedString *attributedString;
@@ -23,6 +19,7 @@
 @property (nonatomic, readonly) CGSize size;
 
 @property (nonatomic) NSMutableArray *hightlight; // YSCoreTextHighlight objects
+
 - (void)drawInContext:(CGContextRef)context;
 
 @end

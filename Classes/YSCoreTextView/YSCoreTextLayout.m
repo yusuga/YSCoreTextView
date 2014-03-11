@@ -9,6 +9,9 @@
 #import "YSCoreTextLayout.h"
 #import "YSCoreTextHighlight.h"
 #import "YSCoreTextConstants.h"
+#import "YSCoreTextAttachment.h"
+
+static NSString * const OBJECT_REPLACEMENT_CHARACTER = @"\uFFFC";
 
 static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
 #if defined(__LP64__) && __LP64__
@@ -18,16 +21,13 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
 #endif
 }
 
-@implementation YSCoreTextLayout
+@interface YSCoreTextLayout ()
 
-- (id)initWithConstraintSize:(CGSize)constraintSize
-                         text:(NSString*)text
-                   attributes:(NSDictionary*)attributes
-{
-    return [self initWithConstraintSize:constraintSize
-                       attributedString:[[NSAttributedString alloc] initWithString:text
-                                                                        attributes:attributes]];
-}
+@property (nonatomic) NSMutableArray *attachments;
+
+@end
+
+@implementation YSCoreTextLayout
 
 - (id)initWithConstraintSize:(CGSize)constraintSize
             attributedString:(NSAttributedString*)attributedString
@@ -53,6 +53,7 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
         SAFE_CFRELEASE(framesetter);
         
         self.hightlight = [NSMutableArray array];
+        self.attachments = [NSMutableArray array];
     }
     return self;
 }
@@ -64,12 +65,51 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
 
 - (void)drawInContext:(CGContextRef)context
 {
+    CFArrayRef lines = CTFrameGetLines(self.ctframe);
+    CFIndex lineCount = CFArrayGetCount(lines);
+    CGPoint lineOrigins[lineCount];
+    CTFrameGetLineOrigins(self.ctframe, CFRangeMake(0, lineCount), lineOrigins);
+    
+    NSMutableArray *attachments = [NSMutableArray array];
+    
     CGContextSaveGState(context);
     CGContextTranslateCTM(context, 0.f, self.size.height);
     CGContextScaleCTM(context, 1.f, -1.f);
-    CGContextSetTextMatrix(context, CGAffineTransformIdentity);
-    CTFrameDraw(self.ctframe, context);
+    for (int lineIdx = 0; lineIdx < lineCount; lineIdx++) {
+        CGPoint origin = lineOrigins[lineIdx];
+        CTLineRef line = CFArrayGetValueAtIndex(lines, lineIdx);
+        CFArrayRef runs = CTLineGetGlyphRuns(line);
+        CFIndex runCount = CFArrayGetCount(runs);
+        CGFloat currentX = 0.f;
+        for (CFIndex runIdx = 0; runIdx < runCount; runIdx++) {
+            CTRunRef run = CFArrayGetValueAtIndex(runs, runIdx);
+            CFDictionaryRef runAttr = CTRunGetAttributes(run);
+            CTRunDelegateRef runDelegate = CFDictionaryGetValue(runAttr, kCTRunDelegateAttributeName);
+            YSCoreTextAttachment *attachment = (__bridge YSCoreTextAttachment*)CTRunDelegateGetRefCon(runDelegate);
+            double width;
+            if (attachment) {
+                CFRange runRange = CTRunGetStringRange(run);
+                CGFloat ascent, descent, leading;
+                width = CTRunGetTypographicBounds(run, CFRangeMake(0, runRange.length), &ascent, &descent, &leading);
+                attachment.drawPoint = CGPointMake(currentX, self.size.height - origin.y - ascent);
+                [attachments addObject:attachment];
+            } else {
+                CFRange runRange = CTRunGetStringRange(run);
+                width = CTRunGetTypographicBounds(run, CFRangeMake(0, runRange.length), NULL, NULL, NULL);
+                CGContextSetTextPosition(context, origin.x, origin.y);
+                CTRunDraw(run, context, CFRangeMake(0, 0));
+            }
+            currentX += width;
+        }
+    }
     CGContextRestoreGState(context);
+
+    for (YSCoreTextAttachment *attachment in attachments) {
+        UIImage *img = attachment.object;
+        if ([img isKindOfClass:[UIImage class]]) {
+            [img drawAtPoint:attachment.drawPoint];
+        }
+    }
     
     for (YSCoreTextHighlight *h in self.hightlight) {
         [self drawSelectedTextFragmentRectsWithRange:h.range color:h.color];
@@ -79,7 +119,7 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
 #pragma mark - Draw highlight
 
 /*
- Base ideas from UZTextView https://github.com/sonsongithub/UZTextView
+ Base idea from UZTextView https://github.com/sonsongithub/UZTextView
  Copyright (c) 2013, sonson
  All rights reserved.
  BSD-License
@@ -142,7 +182,7 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
                                                      &ascent,
                                                      &descent,
                                                      &leading);
-            LOG_CORE_TEXT(@"runRange = %@, intersectionRange = %@, ascent = %@, descent = %@, leading = %@, width = %@;", NSStringFromRange(NSMakeRange(runRange.location, runRange.length)), NSStringFromRange(intersectionRange), @(ascent), @(descent), @(leading), @(width));
+            LOG_CORE_TEXT(@"runRange = %@, intersectionRange = %@, ascent = %f, descent = %f, leading = %f, width = %f;", NSStringFromRange(NSMakeRange(runRange.location, runRange.length)), NSStringFromRange(intersectionRange), ascent, descent, leading, width);
             
             if (intersectionRange.length == 0) {
                 if (lineRect.size.width == 0.f) {
