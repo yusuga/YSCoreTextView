@@ -13,7 +13,7 @@
 + (instancetype)highlightWithRange:(NSRange)range color:(UIColor*)color;
 - (instancetype)initWithRange:(NSRange)range color:(UIColor*)color;
 
-@property (nonatomic, readonly) NSRange range;
+@property (nonatomic) NSRange range;
 @property (nonatomic, readonly) UIColor *color;
 
 @end
