@@ -74,8 +74,8 @@ static NSString * const OBJECT_REPLACEMENT_CHARACTER = @"\uFFFC";
     NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:str];
     
     UIImage *img;
-//    img = [UIImage imageNamed:@"cat10x10"];
-    img = [UIImage imageNamed:@"cat40x40"];
+    img = [UIImage imageNamed:@"cat10x10"];
+//    img = [UIImage imageNamed:@"cat40x40"];
     
     NSRegularExpression *reg = [NSRegularExpression regularExpressionWithPattern:@"[\\w]*( )[\\w]*"
 																		 options:0

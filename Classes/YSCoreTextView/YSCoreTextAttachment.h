@@ -27,6 +27,10 @@
             atIndex:(NSUInteger)index
  toAttributedString:(NSMutableAttributedString*)attributedString;
 
++ (void)insertAttachment:(YSCoreTextAttachment*)attachment
+                 atIndex:(NSUInteger)index
+      toAttributedString:(NSMutableAttributedString *)attributedString;
+
 - (id)initWithObject:(id)object size:(CGSize)size contentEdgeInsets:(UIEdgeInsets)contentEdgeInsets;
 
 @property (nonatomic, readonly) id object;

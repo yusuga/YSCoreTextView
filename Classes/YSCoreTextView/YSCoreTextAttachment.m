@@ -50,6 +50,14 @@ static CGFloat RunDelegateGetWidthCallback(void *refCon)
     YSCoreTextAttachment *attachment = [[YSCoreTextAttachment alloc] initWithObject:image
                                                                                size:image.size
                                                                   contentEdgeInsets:contentEdgeInsets];
+    
+    [self insertAttachment:attachment atIndex:index toAttributedString:attributedString];
+}
+
++ (void)insertAttachment:(YSCoreTextAttachment*)attachment
+                 atIndex:(NSUInteger)index
+      toAttributedString:(NSMutableAttributedString *)attributedString
+{
     CTRunDelegateCallbacks callbacks = attachment.callbacks;
     CTRunDelegateRef runDelegate = CTRunDelegateCreate(&callbacks, (__bridge void *)attachment);
     NSAttributedString *attachmentStr = [[NSAttributedString alloc] initWithString:OBJECT_REPLACEMENT_CHARACTER
