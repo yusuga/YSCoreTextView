@@ -136,7 +136,7 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
     
     NSArray *fragmentRects = [self fragmentRectsForGlyphFromIndex:fromIndex toIndex:toIndex];
     
-    LOG_CORE_TEXT(@"fragmentRects = %@", fragmentRects);
+    LOG_YSCORE_TEXT(@"fragmentRects = %@", fragmentRects);
     
     [color set];
     for (NSValue *rectValue in fragmentRects) {
@@ -156,13 +156,13 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
 	NSMutableArray *fragmentRects = [NSMutableArray array];
 	
 	NSRange range = NSMakeRange(fromIndex, toIndex - fromIndex + 1);
-    LOG_CORE_TEXT(@"range = %@", NSStringFromRange(range));
+    LOG_YSCORE_TEXT_CTRUN(@"range = %@", NSStringFromRange(range));
     for (NSInteger lineIdx = 0; lineIdx < lineCount; lineIdx++) {
         CGPoint origin = lineOrigins[lineIdx];
         CTLineRef line = CFArrayGetValueAtIndex(lines, lineIdx);
         CFArrayRef runs = CTLineGetGlyphRuns(line);
         CFIndex runCount = CFArrayGetCount(runs);
-        LOG_CORE_TEXT(@"runCount = %@", @(runCount));
+        LOG_YSCORE_TEXT_CTRUN(@"runCount = %@", @(runCount));
         
         CGRect lineRect = CGRectZero;
         lineRect.origin.x = origin.x;
@@ -171,7 +171,7 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
             CTRunRef run = CFArrayGetValueAtIndex(runs, runIdx);
             CFRange runRange = CTRunGetStringRange(run);
             if (runRange.location < nextMinimumIdx) {
-                LOG_CORE_TEXT(@"continue: runRange = %@, nextMinimumIdx = %@", NSStringFromRange(NSMakeRange(runRange.location, runRange.length)), @(nextMinimumIdx));
+                LOG_YSCORE_TEXT_CTRUN(@"continue: runRange = %@, nextMinimumIdx = %@", NSStringFromRange(NSMakeRange(runRange.location, runRange.length)), @(nextMinimumIdx));
                 continue;
             }
             
@@ -182,7 +182,7 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
                                                      &ascent,
                                                      &descent,
                                                      &leading);
-            LOG_CORE_TEXT(@"runRange = %@, intersectionRange = %@, ascent = %f, descent = %f, leading = %f, width = %f;", NSStringFromRange(NSMakeRange(runRange.location, runRange.length)), NSStringFromRange(intersectionRange), ascent, descent, leading, width);
+            LOG_YSCORE_TEXT_CTRUN(@"runRange = %@, intersectionRange = %@, ascent = %f, descent = %f, leading = %f, width = %f;", NSStringFromRange(NSMakeRange(runRange.location, runRange.length)), NSStringFromRange(intersectionRange), ascent, descent, leading, width);
             
             if (intersectionRange.length == 0) {
                 if (lineRect.size.width == 0.f) {

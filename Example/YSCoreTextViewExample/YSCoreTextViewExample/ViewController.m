@@ -95,6 +95,21 @@ static NSString * const OBJECT_REPLACEMENT_CHARACTER = @"\uFFFC";
     
     YSCoreTextLayout *layout = [[YSCoreTextLayout alloc] initWithConstraintSize:self.textView2.bounds.size attributedString:attrStr];
     
+    reg = [NSRegularExpression regularExpressionWithPattern:@"(Simple drawing)"
+                                                    options:0
+                                                      error:nil];
+	NSArray *array = [reg matchesInString:attrStr.string options:0 range:NSMakeRange(0, attrStr.length)];
+    NSMutableArray *hightlight = [NSMutableArray arrayWithCapacity:[array count]];
+    for (NSTextCheckingResult *result in array) {
+		if ([result numberOfRanges]) {
+			if ([result rangeAtIndex:1].length) {
+                [hightlight addObject:[YSCoreTextHighlight highlightWithRange:result.range
+                                                                        color:[[UIColor blueColor] colorWithAlphaComponent:0.4]]];
+            }
+        }
+    }
+    layout.hightlight = hightlight;
+    
     self.textView2.layout = layout;
 }
 

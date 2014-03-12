@@ -11,11 +11,18 @@
 #define SAFE_CFRELEASE(p) if(p){CFRelease(p);p=NULL;}
 
 #if DEBUG
-    #if 1
-        #define LOG_CORE_TEXT(...) NSLog(__VA_ARGS__)
+    #if 0
+        #define LOG_YSCORE_TEXT(...) NSLog(__VA_ARGS__)
+    #endif
+    #if 0
+        #define LOG_YSCORE_TEXT_CTRUN(...) NSLog(__VA_ARGS__)
     #endif
 #endif
 
-#ifndef LOG_CORE_TEXT
-    #define LOG_CORE_TEXT(...)
+#ifndef LOG_YSCORE_TEXT
+    #define LOG_YSCORE_TEXT(...)
+#endif
+
+#ifndef LOG_YSCORE_TEXT_CTRUN
+    #define LOG_YSCORE_TEXT_CTRUN(...)
 #endif
