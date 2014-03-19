@@ -9,9 +9,7 @@
 #import "YSCoreTextLayout.h"
 #import "YSCoreTextHighlight.h"
 #import "YSCoreTextConstants.h"
-#import "YSCoreTextAttachment.h"
-
-static NSString * const OBJECT_REPLACEMENT_CHARACTER = @"\uFFFC";
+#import "YSCoreTextAttachmentProtocol.h"
 
 static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
 #if defined(__LP64__) && __LP64__
@@ -85,18 +83,23 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
             CTRunRef run = CFArrayGetValueAtIndex(runs, runIdx);
             CFDictionaryRef runAttr = CTRunGetAttributes(run);
             CTRunDelegateRef runDelegate = CFDictionaryGetValue(runAttr, kCTRunDelegateAttributeName);
-            YSCoreTextAttachment *attachment = (__bridge YSCoreTextAttachment*)CTRunDelegateGetRefCon(runDelegate);
+            id <YSCoreTextAttachmentProtocol>attachment = (__bridge id <YSCoreTextAttachmentProtocol>)CTRunDelegateGetRefCon(runDelegate);
             double width;
-            if (attachment) {
+            if ([attachment respondsToSelector:@selector(drawPoint)]) {
                 CFRange runRange = CTRunGetStringRange(run);
                 CGFloat ascent, descent, leading;
                 width = CTRunGetTypographicBounds(run, CFRangeMake(0, runRange.length), &ascent, &descent, &leading);
                 attachment.drawPoint = CGPointMake(currentX, self.size.height - origin.y - ascent);
                 [attachments addObject:attachment];
             } else {
+                CGFloat insetLeft = 0.f, insetTop = 0.f;
+                if (attachment) {
+                    insetLeft = attachment.contentEdgeInsets.left;
+                    insetTop = attachment.contentEdgeInsets.top;
+                }
                 CFRange runRange = CTRunGetStringRange(run);
                 width = CTRunGetTypographicBounds(run, CFRangeMake(0, runRange.length), NULL, NULL, NULL);
-                CGContextSetTextPosition(context, origin.x, origin.y);
+                CGContextSetTextPosition(context, origin.x + insetLeft, origin.y - insetTop);
                 CTRunDraw(run, context, CFRangeMake(0, 0));
             }
             currentX += width;
@@ -104,7 +107,8 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
     }
     CGContextRestoreGState(context);
 
-    for (YSCoreTextAttachment *attachment in attachments) {
+    for (id <YSCoreTextAttachmentProtocol> attachment in attachments) {
+        NSAssert1([attachment respondsToSelector:@selector(object)], @"attachment = %@", attachment);
         UIImage *img = attachment.object;
         if ([img isKindOfClass:[UIImage class]]) {
             [img drawAtPoint:attachment.drawPoint];

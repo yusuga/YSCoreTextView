@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B85FB14518D9750C0054BA27 /* YSCoreTextConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = B85FB14418D9750C0054BA27 /* YSCoreTextConstants.m */; };
+		B85FB14818D9798E0054BA27 /* YSCoreTextAttachmentImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B85FB14718D9798E0054BA27 /* YSCoreTextAttachmentImage.m */; };
 		B88D36F918C17E53005B21DF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B88D36F818C17E53005B21DF /* Foundation.framework */; };
 		B88D36FB18C17E53005B21DF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B88D36FA18C17E53005B21DF /* CoreGraphics.framework */; };
 		B88D36FD18C17E53005B21DF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B88D36FC18C17E53005B21DF /* UIKit.framework */; };
@@ -41,6 +43,9 @@
 
 /* Begin PBXFileReference section */
 		B85FB14318D960E80054BA27 /* YSCoreTextAttachmentProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YSCoreTextAttachmentProtocol.h; sourceTree = "<group>"; };
+		B85FB14418D9750C0054BA27 /* YSCoreTextConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSCoreTextConstants.m; sourceTree = "<group>"; };
+		B85FB14618D9798E0054BA27 /* YSCoreTextAttachmentImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = YSCoreTextAttachmentImage.h; sourceTree = "<group>"; };
+		B85FB14718D9798E0054BA27 /* YSCoreTextAttachmentImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = YSCoreTextAttachmentImage.m; sourceTree = "<group>"; };
 		B88D36F518C17E53005B21DF /* YSCoreTextViewExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YSCoreTextViewExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B88D36F818C17E53005B21DF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B88D36FA18C17E53005B21DF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -182,10 +187,13 @@
 				B88D373218C18ECE005B21DF /* YSCoreTextLayout.m */,
 				B88D373418C19FDB005B21DF /* YSCoreTextHighlight.h */,
 				B88D373518C19FDB005B21DF /* YSCoreTextHighlight.m */,
+				B85FB14618D9798E0054BA27 /* YSCoreTextAttachmentImage.h */,
+				B85FB14718D9798E0054BA27 /* YSCoreTextAttachmentImage.m */,
 				B85FB14318D960E80054BA27 /* YSCoreTextAttachmentProtocol.h */,
 				B8BBFAD418CEF55C0082BAEC /* YSCoreTextAttachment.h */,
 				B8BBFAD518CEF55C0082BAEC /* YSCoreTextAttachment.m */,
 				B88D378218C1E033005B21DF /* YSCoreTextConstants.h */,
+				B85FB14418D9750C0054BA27 /* YSCoreTextConstants.m */,
 			);
 			name = YSCoreTextView;
 			path = ../../Classes/YSCoreTextView;
@@ -295,7 +303,9 @@
 				B8BBFAD618CEF55C0082BAEC /* YSCoreTextAttachment.m in Sources */,
 				B88D370F18C17E53005B21DF /* ViewController.m in Sources */,
 				B88D370918C17E53005B21DF /* AppDelegate.m in Sources */,
+				B85FB14518D9750C0054BA27 /* YSCoreTextConstants.m in Sources */,
 				B88D373318C18ECE005B21DF /* YSCoreTextLayout.m in Sources */,
+				B85FB14818D9798E0054BA27 /* YSCoreTextAttachmentImage.m in Sources */,
 				B88D370518C17E53005B21DF /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

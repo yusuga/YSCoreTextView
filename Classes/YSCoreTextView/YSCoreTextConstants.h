@@ -8,8 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-#define SAFE_CFRELEASE(p) if(p){CFRelease(p);p=NULL;}
-
 #if DEBUG
     #if 0
         #define LOG_YSCORE_TEXT(...) NSLog(__VA_ARGS__)
@@ -26,3 +24,9 @@
 #ifndef LOG_YSCORE_TEXT_CTRUN
     #define LOG_YSCORE_TEXT_CTRUN(...)
 #endif
+
+#define SAFE_CFRELEASE(p) if(p){CFRelease(p);p=NULL;}
+
+extern NSString * const OBJECT_REPLACEMENT_CHARACTER;
+extern NSString * const kYSCoreTextAttachment;
+

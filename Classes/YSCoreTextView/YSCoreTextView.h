@@ -10,7 +10,7 @@
 @import CoreText;
 #import "YSCoreTextLayout.h"
 #import "YSCoreTextHighlight.h"
-#import "YSCoreTextAttachment.h"
+#import "YSCoreTextAttachmentImage.h"
 
 @interface YSCoreTextView : UIView
 

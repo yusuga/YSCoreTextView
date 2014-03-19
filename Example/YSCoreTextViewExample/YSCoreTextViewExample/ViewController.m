@@ -86,10 +86,10 @@ static NSString * const OBJECT_REPLACEMENT_CHARACTER = @"\uFFFC";
         if ([result numberOfRanges] > 1) {
             NSRange range = [result rangeAtIndex:1];
             [attrStr replaceCharactersInRange:range withString:@""];
-            [YSCoreTextAttachment insertImage:img
-                            contentEdgeInsets:UIEdgeInsetsMake(0.f, 2.f, 0.f, 2.f)
-                                      atIndex:range.location
-                           toAttributedString:attrStr];
+            [YSCoreTextAttachmentImage insertImage:img
+                                 contentEdgeInsets:UIEdgeInsetsMake(0.f, 2.f, 0.f, 2.f)
+                                           atIndex:range.location
+                                toAttributedString:attrStr];
         }
     } while (result.numberOfRanges != 0);
     

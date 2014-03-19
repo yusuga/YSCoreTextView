@@ -7,9 +7,7 @@
 //
 
 #import "YSCoreTextAttachment.h"
-
-static NSString * const OBJECT_REPLACEMENT_CHARACTER = @"\uFFFC";
-static NSString * const kYSCoreTextAttachment = @"kYSCoreTextAttachment";
+#import "YSCoreTextConstants.h"
 
 static void RunDelegateDeallocateCallback(void *refCon)
 {
@@ -18,8 +16,8 @@ static void RunDelegateDeallocateCallback(void *refCon)
 
 static CGFloat RunDelegateGetAscentCallback(void *refCon)
 {
-    YSCoreTextAttachment *object = (__bridge YSCoreTextAttachment *)refCon;
-    return object.contentEdgeInsets.top + object.size.height + object.contentEdgeInsets.bottom;
+    YSCoreTextAttachment *attachment = (__bridge YSCoreTextAttachment *)refCon;
+    return attachment.contentEdgeInsets.top + attachment.size.height + attachment.contentEdgeInsets.bottom;
 }
 
 static CGFloat RunDelegateGetDescentCallback(void *refCon)
@@ -29,59 +27,11 @@ static CGFloat RunDelegateGetDescentCallback(void *refCon)
 
 static CGFloat RunDelegateGetWidthCallback(void *refCon)
 {
-    YSCoreTextAttachment *object = (__bridge YSCoreTextAttachment *)refCon;
-    return object.contentEdgeInsets.left + object.size.width + object.contentEdgeInsets.right;
+    YSCoreTextAttachment *attachment = (__bridge YSCoreTextAttachment *)refCon;
+    return attachment.contentEdgeInsets.left + attachment.size.width + attachment.contentEdgeInsets.right;
 }
 
 @implementation YSCoreTextAttachment
-
-+ (void)appendImage:(UIImage*)image
-  contentEdgeInsets:(UIEdgeInsets)contentEdgeInsets
- toAttributedString:(NSMutableAttributedString *)attributedString
-{
-    [self insertImage:image contentEdgeInsets:contentEdgeInsets atIndex:attributedString.length toAttributedString:attributedString];
-}
-
-+ (void)insertImage:(UIImage*)image
-  contentEdgeInsets:(UIEdgeInsets)contentEdgeInsets
-            atIndex:(NSUInteger)index
- toAttributedString:(NSMutableAttributedString *)attributedString
-{
-    YSCoreTextAttachment *attachment = [[YSCoreTextAttachment alloc] initWithObject:image
-                                                                               size:image.size
-                                                                  contentEdgeInsets:contentEdgeInsets];
-    
-    [self insertAttachment:attachment atIndex:index toAttributedString:attributedString];
-}
-
-+ (void)insertAttachment:(YSCoreTextAttachment*)attachment
-                 atIndex:(NSUInteger)index
-      toAttributedString:(NSMutableAttributedString *)attributedString
-{
-    CTRunDelegateCallbacks callbacks = attachment.callbacks;
-    CTRunDelegateRef runDelegate = CTRunDelegateCreate(&callbacks, (__bridge void *)attachment);
-    NSAttributedString *attachmentStr = [[NSAttributedString alloc] initWithString:OBJECT_REPLACEMENT_CHARACTER
-                                                                        attributes:@{(id)kCTRunDelegateAttributeName : (__bridge id)runDelegate,
-                                                                                     kYSCoreTextAttachment : attachment}];
-    CFRelease(runDelegate);
-    
-    if (attributedString.length <= index) {
-        [attributedString appendAttributedString:attachmentStr];
-    } else {
-        [attributedString insertAttributedString:attachmentStr atIndex:index];
-    }
-}
-
-- (id)initWithObject:(id)object size:(CGSize)size contentEdgeInsets:(UIEdgeInsets)contentEdgeInsets
-{
-    self = [super init];
-    if (self) {
-        _object = object;
-        _size = size;
-        _contentEdgeInsets = contentEdgeInsets;
-    }
-    return self;
-}
 
 - (CTRunDelegateCallbacks)callbacks
 {
@@ -95,16 +45,23 @@ static CGFloat RunDelegateGetWidthCallback(void *refCon)
     return callbacks;
 }
 
-- (CGPoint)drawPoint
+#pragma mark - YSCoreTextAttachmentProtocol required method
+
++ (void)insertAttachment:(id)attachment
+                 atIndex:(NSUInteger)index
+      toAttributedString:(NSMutableAttributedString *)attributedString
 {
-    return CGPointMake(self.contentEdgeInsets.left + _drawPoint.x,
-                       self.contentEdgeInsets.top + _drawPoint.y);
+    abort();
 }
 
-- (NSString *)description
+- (CGSize)size
 {
-    return [NSString stringWithFormat:@"{\n\
-    %@, %@, size: %@\n}", [super description], self.object, NSStringFromCGSize(self.size)];
+    abort();
+}
+
+- (UIEdgeInsets)contentEdgeInsets
+{
+    abort();
 }
 
 @end

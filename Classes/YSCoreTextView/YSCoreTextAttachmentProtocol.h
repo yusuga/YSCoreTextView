@@ -14,4 +14,11 @@
                  atIndex:(NSUInteger)index
       toAttributedString:(NSMutableAttributedString *)attributedString;
 
+- (CGSize)size;
+- (UIEdgeInsets)contentEdgeInsets;
+
+@optional
+- (id)object;
+@property (nonatomic) CGPoint drawPoint;
+
 @end
