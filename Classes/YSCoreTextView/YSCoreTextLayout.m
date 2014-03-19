@@ -98,9 +98,14 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
                     adjustX = offset.left + offset.right;
                     adjustY = offset.top + offset.bottom;
                 }
-                
-                CFRange runRange = CTRunGetStringRange(run);
-                width = CTRunGetTypographicBounds(run, CFRangeMake(0, runRange.length), NULL, NULL, NULL);
+                NSUInteger len;
+                if ([attachment respondsToSelector:@selector(custumLength)]) {
+                    len = [attachment custumLength];
+                } else {
+                    CFRange runRange = CTRunGetStringRange(run);
+                    len = runRange.length;
+                }
+                width = CTRunGetTypographicBounds(run, CFRangeMake(0, len), NULL, NULL, NULL);
                 CGContextSetTextPosition(context, origin.x + adjustX, origin.y - adjustY);
                 CTRunDraw(run, context, CFRangeMake(0, 0));
             }

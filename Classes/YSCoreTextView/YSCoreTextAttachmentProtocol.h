@@ -18,9 +18,11 @@
 - (UIEdgeInsets)contentInset;
 
 @optional
+- (UIEdgeInsets)contentOffset;
+
 - (id)object;
 @property (nonatomic) CGPoint drawPoint;
 
-- (UIEdgeInsets)contentOffset;
+- (NSUInteger)custumLength;
 
 @end
