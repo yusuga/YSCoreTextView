@@ -12,25 +12,22 @@
 @implementation YSCoreTextAttachmentImage
 @synthesize size = _size;
 @synthesize drawPoint = _drawPoint;
-@synthesize contentEdgeInsets = _contentEdgeInsets;
 
-+ (void)appendImage:(UIImage*)image
-  contentEdgeInsets:(UIEdgeInsets)contentEdgeInsets
++ (YSCoreTextAttachmentImage*)appendImage:(UIImage*)image
  toAttributedString:(NSMutableAttributedString *)attributedString
 {
-    [self insertImage:image contentEdgeInsets:contentEdgeInsets atIndex:attributedString.length toAttributedString:attributedString];
+    return [self insertImage:image atIndex:attributedString.length toAttributedString:attributedString];
 }
 
-+ (void)insertImage:(UIImage*)image
-  contentEdgeInsets:(UIEdgeInsets)contentEdgeInsets
-            atIndex:(NSUInteger)index
- toAttributedString:(NSMutableAttributedString *)attributedString
++ (YSCoreTextAttachmentImage*)insertImage:(UIImage*)image
+                                  atIndex:(NSUInteger)index
+                       toAttributedString:(NSMutableAttributedString *)attributedString
 {
     YSCoreTextAttachmentImage *attachment = [[YSCoreTextAttachmentImage alloc] initWithObject:image
-                                                                                         size:image.size
-                                                                            contentEdgeInsets:contentEdgeInsets];
+                                                                                         size:image.size];
     
     [self insertAttachment:attachment atIndex:index toAttributedString:attributedString];
+    return attachment;
 }
 
 + (void)insertAttachment:(YSCoreTextAttachmentImage*)attachment
@@ -51,21 +48,22 @@
     }
 }
 
-- (id)initWithObject:(id)object size:(CGSize)size contentEdgeInsets:(UIEdgeInsets)contentEdgeInsets
+- (id)initWithObject:(id)object size:(CGSize)size
 {
     self = [super init];
     if (self) {
         _object = object;
         _size = size;
-        _contentEdgeInsets = contentEdgeInsets;
+        self.contentInset = UIEdgeInsetsZero;
+        self.contentOffset = UIEdgeInsetsZero;
     }
     return self;
 }
 
 - (CGPoint)drawPoint
 {
-    return CGPointMake(self.contentEdgeInsets.left + _drawPoint.x,
-                       self.contentEdgeInsets.top + _drawPoint.y);
+    return CGPointMake(self.contentOffset.left + _drawPoint.x - self.contentOffset.right,
+                       self.contentOffset.top + _drawPoint.y - self.contentOffset.bottom);
 }
 
 - (NSString *)description

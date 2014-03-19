@@ -17,7 +17,7 @@ static void RunDelegateDeallocateCallback(void *refCon)
 static CGFloat RunDelegateGetAscentCallback(void *refCon)
 {
     YSCoreTextAttachment *attachment = (__bridge YSCoreTextAttachment *)refCon;
-    return attachment.contentEdgeInsets.top + attachment.size.height + attachment.contentEdgeInsets.bottom;
+    return attachment.contentInset.top + attachment.size.height + attachment.contentInset.bottom;
 }
 
 static CGFloat RunDelegateGetDescentCallback(void *refCon)
@@ -28,7 +28,7 @@ static CGFloat RunDelegateGetDescentCallback(void *refCon)
 static CGFloat RunDelegateGetWidthCallback(void *refCon)
 {
     YSCoreTextAttachment *attachment = (__bridge YSCoreTextAttachment *)refCon;
-    return attachment.contentEdgeInsets.left + attachment.size.width + attachment.contentEdgeInsets.right;
+    return attachment.contentInset.left + attachment.size.width + attachment.contentInset.right;
 }
 
 @implementation YSCoreTextAttachment
@@ -59,7 +59,7 @@ static CGFloat RunDelegateGetWidthCallback(void *refCon)
     abort();
 }
 
-- (UIEdgeInsets)contentEdgeInsets
+- (UIEdgeInsets)contentInset
 {
     abort();
 }

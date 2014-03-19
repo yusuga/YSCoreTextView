@@ -92,14 +92,16 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
                 attachment.drawPoint = CGPointMake(currentX, self.size.height - origin.y - ascent);
                 [attachments addObject:attachment];
             } else {
-                CGFloat insetLeft = 0.f, insetTop = 0.f;
-                if (attachment) {
-                    insetLeft = attachment.contentEdgeInsets.left;
-                    insetTop = attachment.contentEdgeInsets.top;
+                CGFloat adjustX = 0.f, adjustY = 0.f;
+                if ([attachment respondsToSelector:@selector(contentOffset)]) {
+                    UIEdgeInsets offset = attachment.contentOffset;
+                    adjustX = offset.left + offset.right;
+                    adjustY = offset.top + offset.bottom;
                 }
+                
                 CFRange runRange = CTRunGetStringRange(run);
                 width = CTRunGetTypographicBounds(run, CFRangeMake(0, runRange.length), NULL, NULL, NULL);
-                CGContextSetTextPosition(context, origin.x + insetLeft, origin.y - insetTop);
+                CGContextSetTextPosition(context, origin.x + adjustX, origin.y - adjustY);
                 CTRunDraw(run, context, CFRangeMake(0, 0));
             }
             currentX += width;

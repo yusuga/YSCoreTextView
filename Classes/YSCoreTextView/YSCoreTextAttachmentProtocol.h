@@ -15,10 +15,12 @@
       toAttributedString:(NSMutableAttributedString *)attributedString;
 
 - (CGSize)size;
-- (UIEdgeInsets)contentEdgeInsets;
+- (UIEdgeInsets)contentInset;
 
 @optional
 - (id)object;
 @property (nonatomic) CGPoint drawPoint;
+
+- (UIEdgeInsets)contentOffset;
 
 @end
