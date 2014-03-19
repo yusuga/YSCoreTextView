@@ -40,6 +40,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B85FB14318D960E80054BA27 /* YSCoreTextAttachmentProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = YSCoreTextAttachmentProtocol.h; sourceTree = "<group>"; };
 		B88D36F518C17E53005B21DF /* YSCoreTextViewExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YSCoreTextViewExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B88D36F818C17E53005B21DF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B88D36FA18C17E53005B21DF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -181,6 +182,7 @@
 				B88D373218C18ECE005B21DF /* YSCoreTextLayout.m */,
 				B88D373418C19FDB005B21DF /* YSCoreTextHighlight.h */,
 				B88D373518C19FDB005B21DF /* YSCoreTextHighlight.m */,
+				B85FB14318D960E80054BA27 /* YSCoreTextAttachmentProtocol.h */,
 				B8BBFAD418CEF55C0082BAEC /* YSCoreTextAttachment.h */,
 				B8BBFAD518CEF55C0082BAEC /* YSCoreTextAttachment.m */,
 				B88D378218C1E033005B21DF /* YSCoreTextConstants.h */,
@@ -233,7 +235,7 @@
 		B88D36ED18C17E53005B21DF /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Yu Sugawara";
 				TargetAttributes = {
 					B88D371518C17E53005B21DF = {
@@ -348,7 +350,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -387,7 +388,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -445,7 +445,6 @@
 		B88D372B18C17E53005B21DF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/YSCoreTextViewExample.app/YSCoreTextViewExample";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -468,7 +467,6 @@
 		B88D372C18C17E53005B21DF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/YSCoreTextViewExample.app/YSCoreTextViewExample";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",

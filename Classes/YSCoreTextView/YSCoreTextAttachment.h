@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 @import CoreText;
+#import "YSCoreTextAttachmentProtocol.h"
 
 /*
  Base code from SECoreTextView (https://github.com/kishikawakatsumi/SECoreTextView>
@@ -16,7 +17,7 @@
  MIT license
  */
 
-@interface YSCoreTextAttachment : NSObject
+@interface YSCoreTextAttachment : NSObject <YSCoreTextAttachmentProtocol>
 
 + (void)appendImage:(UIImage*)image
   contentEdgeInsets:(UIEdgeInsets)contentEdgeInsets
