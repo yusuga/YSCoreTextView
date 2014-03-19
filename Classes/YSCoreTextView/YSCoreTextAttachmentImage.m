@@ -55,15 +55,15 @@
         _object = object;
         _size = size;
         self.contentInset = UIEdgeInsetsZero;
-        self.contentOffset = UIEdgeInsetsZero;
+        self.contentEdgeInsets = UIEdgeInsetsZero;
     }
     return self;
 }
 
 - (CGPoint)drawPoint
 {
-    return CGPointMake(self.contentOffset.left + _drawPoint.x - self.contentOffset.right,
-                       self.contentOffset.top + _drawPoint.y - self.contentOffset.bottom);
+    return CGPointMake(self.contentEdgeInsets.left + _drawPoint.x - self.contentEdgeInsets.right,
+                       self.contentEdgeInsets.top + _drawPoint.y - self.contentEdgeInsets.bottom);
 }
 
 - (NSString *)description

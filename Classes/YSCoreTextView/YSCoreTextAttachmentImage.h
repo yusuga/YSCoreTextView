@@ -26,7 +26,7 @@
 
 @property (nonatomic, readonly) CGSize size;
 @property (nonatomic) UIEdgeInsets contentInset;
-@property (nonatomic) UIEdgeInsets contentOffset;
+@property (nonatomic) UIEdgeInsets contentEdgeInsets;
 @property (nonatomic, readonly) id object;
 
 @end

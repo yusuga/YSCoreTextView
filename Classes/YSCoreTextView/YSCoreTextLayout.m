@@ -93,10 +93,10 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
                 [attachments addObject:attachment];
             } else {
                 CGFloat adjustX = 0.f, adjustY = 0.f;
-                if ([attachment respondsToSelector:@selector(contentOffset)]) {
-                    UIEdgeInsets offset = attachment.contentOffset;
-                    adjustX = offset.left + offset.right;
-                    adjustY = offset.top + offset.bottom;
+                if ([attachment respondsToSelector:@selector(contentEdgeInsets)]) {
+                    UIEdgeInsets insets = attachment.contentEdgeInsets;
+                    adjustX = insets.left + insets.right;
+                    adjustY = insets.top + insets.bottom;
                 }
                 NSUInteger len;
                 if ([attachment respondsToSelector:@selector(custumLength)]) {

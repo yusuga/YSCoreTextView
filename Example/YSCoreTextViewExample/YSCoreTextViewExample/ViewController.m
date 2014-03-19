@@ -90,7 +90,8 @@ static NSString * const OBJECT_REPLACEMENT_CHARACTER = @"\uFFFC";
                                                                                    atIndex:range.location
                                                                         toAttributedString:attrStr];
             attachment.contentInset = UIEdgeInsetsMake(0.f, 3.f, 0.f, 3.f);
-            attachment.contentOffset = UIEdgeInsetsMake(0.f, attachment.contentInset.left, 0.f, 0.f);
+            [attachment configureAlignmentCenter];
+//            attachment.contentEdgeInsets = UIEdgeInsetsMake(0.f, attachment.contentInset.left, 0.f, 0.f);
         }
     } while (result.numberOfRanges != 0);
     

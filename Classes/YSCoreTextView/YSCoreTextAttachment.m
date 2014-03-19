@@ -45,6 +45,25 @@ static CGFloat RunDelegateGetWidthCallback(void *refCon)
     return callbacks;
 }
 
+- (void)configureAlignmentCenter
+{
+    if (![self respondsToSelector:@selector(contentEdgeInsets)] ||
+        ![self respondsToSelector:@selector(setContentEdgeInsets:)] ||
+        UIEdgeInsetsEqualToEdgeInsets(self.contentInset, UIEdgeInsetsZero))
+    {
+        NSLog(@"%s; not working", __func__);
+        return;
+    }
+    // Simple centering
+    if (self.contentInset.left != self.contentInset.right) {
+        NSLog(@"contentInset.left and contentInset.right is not equal");
+        return;
+    }
+    UIEdgeInsets edgeInsets = self.contentEdgeInsets;
+    edgeInsets.left = self.contentInset.left;
+    [self setContentEdgeInsets:edgeInsets];
+}
+
 #pragma mark - YSCoreTextAttachmentProtocol required method
 
 + (void)insertAttachment:(id)attachment
@@ -61,7 +80,7 @@ static CGFloat RunDelegateGetWidthCallback(void *refCon)
 
 - (UIEdgeInsets)contentInset
 {
-    abort();
+    return UIEdgeInsetsZero;
 }
 
 @end

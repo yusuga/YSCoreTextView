@@ -20,5 +20,6 @@
 @interface YSCoreTextAttachment : NSObject <YSCoreTextAttachmentProtocol>
 
 @property (nonatomic, readonly) CTRunDelegateCallbacks callbacks;
+- (void)configureAlignmentCenter;
 
 @end
