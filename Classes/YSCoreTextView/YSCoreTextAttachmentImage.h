@@ -19,6 +19,11 @@
 
 - (instancetype)initWithObject:(id)object size:(CGSize)size;
 
+/* YSCoreTextAttachmentProtocol */
++ (void)insertAttachment:(YSCoreTextAttachmentImage*)attachment
+                 atIndex:(NSUInteger)index
+      toAttributedString:(NSMutableAttributedString *)attributedString;
+
 @property (nonatomic, readonly) CGSize size;
 @property (nonatomic) UIEdgeInsets contentInset;
 @property (nonatomic) UIEdgeInsets contentOffset;
