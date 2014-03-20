@@ -11,20 +11,28 @@
 @interface YSCoreTextAttachmentImage : YSCoreTextAttachment
 
 + (YSCoreTextAttachmentImage*)appendImage:(UIImage*)image
+                               withAscent:(CGFloat)ascent
+                                  descent:(CGFloat)descent
                        toAttributedString:(NSMutableAttributedString*)attributedString;
 
 + (YSCoreTextAttachmentImage*)insertImage:(UIImage*)image
+                               withAscent:(CGFloat)ascent
+                                  descent:(CGFloat)descent
                                   atIndex:(NSUInteger)index
                        toAttributedString:(NSMutableAttributedString*)attributedString;
 
-- (instancetype)initWithObject:(id)object size:(CGSize)size;
+- (instancetype)initWithObject:(UIImage*)image
+                        ascent:(CGFloat)ascent
+                       descent:(CGFloat)descent;
 
 /* YSCoreTextAttachmentProtocol */
 + (void)insertAttachment:(YSCoreTextAttachmentImage*)attachment
                  atIndex:(NSUInteger)index
       toAttributedString:(NSMutableAttributedString *)attributedString;
 
-@property (nonatomic, readonly) CGSize size;
+@property (nonatomic, readonly) CGFloat ascent;
+@property (nonatomic, readonly) CGFloat descent;
+@property (nonatomic, readonly) CGFloat width;
 @property (nonatomic) UIEdgeInsets contentInset;
 @property (nonatomic) UIEdgeInsets contentEdgeInsets;
 @property (nonatomic, readonly) id object;

@@ -10,21 +10,32 @@
 #import "YSCoreTextConstants.h"
 
 @implementation YSCoreTextAttachmentImage
-@synthesize size = _size;
+@synthesize ascent = _ascent;
+@synthesize descent = _descent;
+@synthesize width = _width;
 @synthesize drawPoint = _drawPoint;
 
-+ (YSCoreTextAttachmentImage*)appendImage:(UIImage*)image
- toAttributedString:(NSMutableAttributedString *)attributedString
++ (YSCoreTextAttachmentImage*)appendImage:(UIImage *)image
+                               withAscent:(CGFloat)ascent
+                                  descent:(CGFloat)descent
+                       toAttributedString:(NSMutableAttributedString *)attributedString
 {
-    return [self insertImage:image atIndex:attributedString.length toAttributedString:attributedString];
+    return [self insertImage:image
+                  withAscent:ascent
+                     descent:descent
+                     atIndex:attributedString.length
+          toAttributedString:attributedString];
 }
 
 + (YSCoreTextAttachmentImage*)insertImage:(UIImage*)image
+                               withAscent:(CGFloat)ascent
+                                  descent:(CGFloat)descent
                                   atIndex:(NSUInteger)index
                        toAttributedString:(NSMutableAttributedString *)attributedString
 {
     YSCoreTextAttachmentImage *attachment = [[YSCoreTextAttachmentImage alloc] initWithObject:image
-                                                                                         size:image.size];
+                                                                                       ascent:ascent
+                                                                                      descent:descent];
     
     [self insertAttachment:attachment atIndex:index toAttributedString:attributedString];
     return attachment;
@@ -48,12 +59,16 @@
     }
 }
 
-- (id)initWithObject:(id)object size:(CGSize)size
+- (id)initWithObject:(UIImage*)image
+              ascent:(CGFloat)ascent
+             descent:(CGFloat)descent
 {
     self = [super init];
     if (self) {
-        _object = object;
-        _size = size;
+        _object = image;
+        _ascent = ascent;
+        _descent = descent;
+        _width = image.size.width;
         self.contentInset = UIEdgeInsetsZero;
         self.contentEdgeInsets = UIEdgeInsetsZero;
     }
@@ -69,7 +84,7 @@
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"{\n\
-            %@, %@, size: %@\n}", [super description], self.object, NSStringFromCGSize(self.size)];
+            %@, %@, ascent: %f, descent: %f\n}", [super description], self.object, self.ascent, self.descent];
 }
 
 @end

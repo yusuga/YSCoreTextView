@@ -12,7 +12,7 @@
     #if 0
         #define LOG_YSCORE_TEXT(...) NSLog(__VA_ARGS__)
     #endif
-    #if 0
+    #if 1
         #define LOG_YSCORE_TEXT_CTRUN(...) NSLog(__VA_ARGS__)
     #endif
 #endif

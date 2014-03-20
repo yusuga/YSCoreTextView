@@ -173,7 +173,7 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
         CTLineRef line = CFArrayGetValueAtIndex(lines, lineIdx);
         CFArrayRef runs = CTLineGetGlyphRuns(line);
         CFIndex runCount = CFArrayGetCount(runs);
-        LOG_YSCORE_TEXT_CTRUN(@"runCount = %@", @(runCount));
+        LOG_YSCORE_TEXT_CTRUN(@"lineIdx: %@, runCount: %@", @(lineIdx), @(runCount));
         
         CGRect lineRect = CGRectZero;
         lineRect.origin.x = origin.x;
@@ -224,6 +224,7 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
             }
         }
         if (lineRect.size.width > 0.f) {
+            LOG_YSCORE_TEXT_CTRUN(@"Hit, lineRect: %@", NSStringFromCGRect(lineRect));
             [fragmentRects addObject:[NSValue valueWithCGRect:lineRect]];
         }
     }

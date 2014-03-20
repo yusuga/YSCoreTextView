@@ -9,6 +9,8 @@
 #import "ViewController.h"
 #import "YSCoreTextView.h"
 
+#import <YSUIKitAdditions/UIImage+YSUIKitAdditions.h>
+
 @interface ViewController ()
 
 @property (weak, nonatomic) IBOutlet YSCoreTextView *textView;
@@ -24,7 +26,7 @@ static NSString * const OBJECT_REPLACEMENT_CHARACTER = @"\uFFFC";
 {
     [super viewDidLoad];
 
-    [self setupTextView];
+//    [self setupTextView];
     [self setupTextView2];
 }
 
@@ -70,14 +72,38 @@ static NSString * const OBJECT_REPLACEMENT_CHARACTER = @"\uFFFC";
 
 - (void)setupTextView2
 {
-    NSString *str = [@"Simple drawing of the CoreText. Simple drawing of the CoreText. Simple drawing of the CoreText. Simple drawing of the CoreText. " mutableCopy];
+    NSString *str;
+//    str = @"Simple".mutableCopy;
+    str = @"Simple drawing of the CoreText. Simple drawing of the CoreText. Simple drawing of the CoreText. Simple drawing of the CoreText. ".mutableCopy;
     NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:str];
     
-    UIImage *img;
-    img = [UIImage imageNamed:@"cat10x10"];
-//    img = [UIImage imageNamed:@"cat40x40"];
+    UIFont *font = [UIFont systemFontOfSize:20.];
+    CFStringRef fontName = (__bridge CFStringRef)font.fontName;
+    CGFloat fontSize = font.pointSize;
+	CTFontRef ctfont = CTFontCreateWithName(fontName, fontSize, NULL);
     
-    NSRegularExpression *reg = [NSRegularExpression regularExpressionWithPattern:@"[\\w]*( )[\\w]*"
+    [attrStr addAttribute:(id)kCTFontAttributeName value:(__bridge id)ctfont range:NSMakeRange(0, attrStr.length)];
+//    [attrStr addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, attrStr.length)];
+    
+    NSRegularExpression *reg;
+    
+    UIImage *img;
+//    img = [UIImage imageNamed:@"cat10x10"];
+//    img = [UIImage imageNamed:@"cat40x40"];
+    CGFloat imgSize = font.ascender - font.descender;
+    img = [UIImage ys_imageFromColor:[UIColor purpleColor] withSize:CGSizeMake(imgSize, imgSize)];
+#if 0
+    #if 0
+    YSCoreTextAttachmentImage *attachment = [YSCoreTextAttachmentImage insertImage:img
+                                                                        withAscent:font.ascender
+                                                                           descent:font.descender
+                                                                           atIndex:0
+                                                                toAttributedString:attrStr];
+//    attachment.contentInset = UIEdgeInsetsMake(0.f, 3.f, 0.f, 3.f);
+//    [attachment configureAlignmentCenter];
+
+    #else
+    reg = [NSRegularExpression regularExpressionWithPattern:@"[\\w]*( )[\\w]*"
 																		 options:0
 																		   error:nil];
     NSTextCheckingResult *result;
@@ -87,6 +113,8 @@ static NSString * const OBJECT_REPLACEMENT_CHARACTER = @"\uFFFC";
             NSRange range = [result rangeAtIndex:1];
             [attrStr replaceCharactersInRange:range withString:@""];
             YSCoreTextAttachmentImage *attachment = [YSCoreTextAttachmentImage insertImage:img
+                                                                                withAscent:font.ascender
+                                                                                   descent:font.descender
                                                                                    atIndex:range.location
                                                                         toAttributedString:attrStr];
             attachment.contentInset = UIEdgeInsetsMake(0.f, 3.f, 0.f, 3.f);
@@ -94,9 +122,11 @@ static NSString * const OBJECT_REPLACEMENT_CHARACTER = @"\uFFFC";
 //            attachment.contentEdgeInsets = UIEdgeInsetsMake(0.f, attachment.contentInset.left, 0.f, 0.f);
         }
     } while (result.numberOfRanges != 0);
-    
+    #endif
+#endif
     YSCoreTextLayout *layout = [[YSCoreTextLayout alloc] initWithConstraintSize:self.textView2.bounds.size attributedString:attrStr];
     
+#if 1
     reg = [NSRegularExpression regularExpressionWithPattern:@"(Simple drawing)"
                                                     options:0
                                                       error:nil];
@@ -107,12 +137,18 @@ static NSString * const OBJECT_REPLACEMENT_CHARACTER = @"\uFFFC";
 			if ([result rangeAtIndex:1].length) {
                 [hightlight addObject:[YSCoreTextHighlight highlightWithRange:result.range
                                                                         color:[[UIColor blueColor] colorWithAlphaComponent:0.4]]];
+                NSLog(@"%@", [attrStr.string substringWithRange:[result rangeAtIndex:1]]);
             }
         }
     }
     layout.hightlight = hightlight;
+#endif
     
     self.textView2.layout = layout;
+    
+    CGRect frame = self.textView2.frame;
+    frame.size = layout.size;
+    self.textView2.frame = frame;
 }
 
 - (void)viewDidAppear:(BOOL)animated

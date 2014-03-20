@@ -17,18 +17,21 @@ static void RunDelegateDeallocateCallback(void *refCon)
 static CGFloat RunDelegateGetAscentCallback(void *refCon)
 {
     YSCoreTextAttachment *attachment = (__bridge YSCoreTextAttachment *)refCon;
-    return attachment.contentInset.top + attachment.size.height + attachment.contentInset.bottom;
+    return attachment.ascent;
+//    return attachment.contentInset.top + attachment.size.height + attachment.contentInset.bottom;
 }
 
 static CGFloat RunDelegateGetDescentCallback(void *refCon)
 {
-    return 0.0f;
+    YSCoreTextAttachment *attachment = (__bridge YSCoreTextAttachment *)refCon;
+    return attachment.descent;
 }
 
 static CGFloat RunDelegateGetWidthCallback(void *refCon)
 {
     YSCoreTextAttachment *attachment = (__bridge YSCoreTextAttachment *)refCon;
-    return attachment.contentInset.left + attachment.size.width + attachment.contentInset.right;
+    return attachment.width;
+//    return attachment.contentInset.left + attachment.size.width + attachment.contentInset.right;
 }
 
 @implementation YSCoreTextAttachment
@@ -73,7 +76,17 @@ static CGFloat RunDelegateGetWidthCallback(void *refCon)
     abort();
 }
 
-- (CGSize)size
+- (CGFloat)ascent
+{
+    abort();
+}
+
+- (CGFloat)descent
+{
+    abort();
+}
+
+- (CGFloat)width
 {
     abort();
 }

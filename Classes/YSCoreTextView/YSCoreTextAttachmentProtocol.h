@@ -14,7 +14,9 @@
                  atIndex:(NSUInteger)index
       toAttributedString:(NSMutableAttributedString *)attributedString;
 
-- (CGSize)size;
+- (CGFloat)ascent;
+- (CGFloat)descent;
+- (CGFloat)width;
 - (UIEdgeInsets)contentInset;
 
 @optional
