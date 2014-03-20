@@ -73,8 +73,8 @@ static NSString * const OBJECT_REPLACEMENT_CHARACTER = @"\uFFFC";
 - (void)setupTextView2
 {
     NSString *str;
-//    str = @"Simple".mutableCopy;
-    str = @"Simple drawing of the CoreText. Simple drawing of the CoreText. Simple drawing of the CoreText. Simple drawing of the CoreText. ".mutableCopy;
+    str = @"Simple".mutableCopy;
+//    str = @"Simple drawing of the CoreText. Simple drawing of the CoreText. Simple drawing of the CoreText. Simple drawing of the CoreText. ".mutableCopy;
     NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:str];
     
     UIFont *font = [UIFont systemFontOfSize:20.];
@@ -92,15 +92,20 @@ static NSString * const OBJECT_REPLACEMENT_CHARACTER = @"\uFFFC";
 //    img = [UIImage imageNamed:@"cat40x40"];
     CGFloat imgSize = font.ascender - font.descender;
     img = [UIImage ys_imageFromColor:[UIColor purpleColor] withSize:CGSizeMake(imgSize, imgSize)];
-#if 0
-    #if 0
+#if 1
+    #if 1
     YSCoreTextAttachmentImage *attachment = [YSCoreTextAttachmentImage insertImage:img
                                                                         withAscent:font.ascender
                                                                            descent:font.descender
                                                                            atIndex:0
                                                                 toAttributedString:attrStr];
-//    attachment.contentInset = UIEdgeInsetsMake(0.f, 3.f, 0.f, 3.f);
-//    [attachment configureAlignmentCenter];
+    #if 0
+    attachment.contentInset = UIEdgeInsetsMake(10.f, 10.f, 10.f, 10.f);
+    [attachment configureAlignmentCenter];
+    UIEdgeInsets edgeInsets = attachment.contentEdgeInsets;
+    edgeInsets.top = attachment.contentInset.top;
+    attachment.contentEdgeInsets = edgeInsets;
+    #endif
 
     #else
     reg = [NSRegularExpression regularExpressionWithPattern:@"[\\w]*( )[\\w]*"
