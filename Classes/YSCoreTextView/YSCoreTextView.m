@@ -16,7 +16,12 @@
 
 - (void)drawRect:(CGRect)dirtyRect
 {
-    [_layout drawInContext:UIGraphicsGetCurrentContext()];
+    [self.layout drawInContext:UIGraphicsGetCurrentContext()];
+}
+
+- (CGSize)sizeThatFits:(CGSize)size
+{
+    return self.layout.size;
 }
 
 @end

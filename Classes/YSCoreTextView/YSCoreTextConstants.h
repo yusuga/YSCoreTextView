@@ -13,7 +13,7 @@
         #define LOG_YSCORE_TEXT(...) NSLog(__VA_ARGS__)
     #endif
     #if 1
-        #define LOG_YSCORE_TEXT_CTRUN(...) NSLog(__VA_ARGS__)
+        #define LOG_YSCORE_TEXT_CTLINE(...) NSLog(__VA_ARGS__)
     #endif
 #endif
 
@@ -21,8 +21,8 @@
     #define LOG_YSCORE_TEXT(...)
 #endif
 
-#ifndef LOG_YSCORE_TEXT_CTRUN
-    #define LOG_YSCORE_TEXT_CTRUN(...)
+#ifndef LOG_YSCORE_TEXT_CTLINE
+    #define LOG_YSCORE_TEXT_CTLINE(...)
 #endif
 
 #define SAFE_CFRELEASE(p) if(p){CFRelease(p);p=NULL;}

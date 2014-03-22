@@ -167,65 +167,42 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
 	NSMutableArray *fragmentRects = [NSMutableArray array];
 	
 	NSRange range = NSMakeRange(fromIndex, toIndex - fromIndex + 1);
-    LOG_YSCORE_TEXT_CTRUN(@"range = %@", NSStringFromRange(range));
+    LOG_YSCORE_TEXT_CTLINE(@"range = %@", NSStringFromRange(range));
     for (NSInteger lineIdx = 0; lineIdx < lineCount; lineIdx++) {
         CGPoint origin = lineOrigins[lineIdx];
         CTLineRef line = CFArrayGetValueAtIndex(lines, lineIdx);
-        CFArrayRef runs = CTLineGetGlyphRuns(line);
-        CFIndex runCount = CFArrayGetCount(runs);
-        LOG_YSCORE_TEXT_CTRUN(@"lineIdx: %@, runCount: %@", @(lineIdx), @(runCount));
+        CFRange lineRange = CTLineGetStringRange(line);
+        NSRange intersectionRange = NSIntersectionRange(range, NSMakeRange(lineRange.location, lineRange.length));
         
-        CGRect lineRect = CGRectZero;
-        lineRect.origin.x = origin.x;
-        NSUInteger nextMinimumIdx = 0;
-        for (CFIndex runIdx = 0; runIdx < runCount; runIdx++) {
-            CTRunRef run = CFArrayGetValueAtIndex(runs, runIdx);
-            CFRange runRange = CTRunGetStringRange(run);
-            if (runRange.location < nextMinimumIdx) {
-                LOG_YSCORE_TEXT_CTRUN(@"continue: runRange = %@, nextMinimumIdx = %@", NSStringFromRange(NSMakeRange(runRange.location, runRange.length)), @(nextMinimumIdx));
-                continue;
-            }
-            
-            NSRange intersectionRange = NSIntersectionRange(range, NSMakeRange(runRange.location, runRange.length));
+        LOG_YSCORE_TEXT_CTLINE(@"lineIdx = %@, intersectionRange = %@, %@", @(lineIdx), NSStringFromRange(intersectionRange), [self.attributedString.string substringWithRange:intersectionRange]);
+        
+        CGRect fragRect = CGRectZero;
+        if (intersectionRange.length > 0) {
             CGFloat ascent, descent, leading;
-            double width = CTRunGetTypographicBounds(run,
-                                                     CFRangeMake(0, intersectionRange.length),
-                                                     &ascent,
-                                                     &descent,
-                                                     &leading);
-            LOG_YSCORE_TEXT_CTRUN(@"runRange = %@, intersectionRange = %@, ascent = %f, descent = %f, leading = %f, width = %f;", NSStringFromRange(NSMakeRange(runRange.location, runRange.length)), NSStringFromRange(intersectionRange), ascent, descent, leading, width);
+            double  width;
+            width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
             
-            if (intersectionRange.length == 0) {
-                if (lineRect.size.width == 0.f) {
-                    lineRect.origin.x += width;
-                }
-            } else if (runRange.location != intersectionRange.location) {
-                double width = CTRunGetTypographicBounds(run,
-                                                         CFRangeMake(0, intersectionRange.location),
-                                                         NULL,
-                                                         NULL,
-                                                         NULL);
-                lineRect.origin.x += width;
-            }
+            CFIndex startIndex = intersectionRange.location;
+            CGFloat startOffset = CTLineGetOffsetForStringIndex(line, startIndex, NULL);
+            CFIndex endIndex = startIndex + intersectionRange.length;
+            CGFloat endOffset = CTLineGetOffsetForStringIndex(line, endIndex, NULL);
+            CGFloat textWidth = endOffset - startOffset;
             
-            if (intersectionRange.length > 0) {
-                if (lineRect.size.width == 0.f) {
-                    lineRect.origin.y = CGFloat_ceil(origin.y - descent);
-                    lineRect.size.height = CGFloat_ceil(ascent + descent);
-                    lineRect.origin.y = self.size.height - CGRectGetMaxY(lineRect);
-                }
-                lineRect.size.width += width;
-                
-                if (nextMinimumIdx == 0) {
-                    nextMinimumIdx = runRange.location + runRange.length;
-                } else {
-                    nextMinimumIdx += runRange.length;
-                }
-            }
+            fragRect.origin.x = origin.x + startOffset;
+            fragRect.origin.y = CGFloat_ceil(origin.y - descent);
+            fragRect.size.height = CGFloat_ceil(ascent + descent);
+            fragRect.origin.y = self.size.height - CGRectGetMaxY(fragRect);
+            fragRect.size.width = textWidth;
         }
-        if (lineRect.size.width > 0.f) {
-            LOG_YSCORE_TEXT_CTRUN(@"Hit, lineRect: %@", NSStringFromCGRect(lineRect));
-            [fragmentRects addObject:[NSValue valueWithCGRect:lineRect]];
+        
+        if (fragRect.size.width > 0.f) {
+            LOG_YSCORE_TEXT_CTLINE(@"Hit, lineRect: %@", NSStringFromCGRect(fragRect));
+            [fragmentRects addObject:[NSValue valueWithCGRect:fragRect]];
+            
+            if (NSMaxRange(range) == NSMaxRange(intersectionRange)) {
+                LOG_YSCORE_TEXT_CTLINE(@"break");
+                break;
+            }
         }
     }
 	return [NSArray arrayWithArray:fragmentRects];
