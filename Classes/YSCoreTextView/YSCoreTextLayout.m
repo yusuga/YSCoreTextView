@@ -50,7 +50,7 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
                                             NULL);
         SAFE_CFRELEASE(framesetter);
         
-        self.hightlight = [NSMutableArray array];
+        self.highlight = [NSMutableArray array];
         self.attachments = [NSMutableArray array];
     }
     return self;
@@ -122,7 +122,7 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
         }
     }
     
-    for (YSCoreTextHighlight *h in self.hightlight) {
+    for (YSCoreTextHighlight *h in self.highlight) {
         [self drawSelectedTextFragmentRectsWithRange:h.range color:h.color];
     }
 }
