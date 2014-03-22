@@ -11,14 +11,18 @@
 
 #import <YSUIKitAdditions/UIImage+YSUIKitAdditions.h>
 
-@interface ViewController ()
-
-@property (weak, nonatomic) IBOutlet YSCoreTextView *textView;
-@property (weak, nonatomic) IBOutlet YSCoreTextView *textView2;
-
+@interface Attachment : YSCoreTextAttachmentImage
+@property (nonatomic) NSUInteger insertionIndex;
 @end
 
-static NSString * const OBJECT_REPLACEMENT_CHARACTER = @"\uFFFC";
+@implementation Attachment
+@end
+
+@interface ViewController ()
+
+@property (nonatomic) CGFloat y;
+
+@end
 
 @implementation ViewController
 
@@ -26,145 +30,129 @@ static NSString * const OBJECT_REPLACEMENT_CHARACTER = @"\uFFFC";
 {
     [super viewDidLoad];
 
-//    [self setupTextView];
-    [self setupTextView2];
+    self.y = 20.f;
+    CGFloat fontSize = 13.f;
+    
+    NSString *oneLine = @"one line highlight";
+    NSString *multiLine = @"multi line highlight. multi line highlight. multi line highlight. multi line highlight. multi line highlight. multi line highlight.";
+    
+    [self addTextViewWithText:oneLine fontSize:fontSize regularExpressionPattern:@"(one)" attachments:nil];
+    [self addTextViewWithText:oneLine fontSize:fontSize regularExpressionPattern:@"(line)" attachments:nil];
+    [self addTextViewWithText:oneLine fontSize:fontSize regularExpressionPattern:@"(hli)" attachments:nil];
+    
+    [self addTextViewWithText:multiLine fontSize:fontSize regularExpressionPattern:@"(line high)" attachments:nil];
+    
+    [self addTextViewWithText:oneLine
+                     fontSize:fontSize
+     regularExpressionPattern:@"(one)"
+                  attachments:@[[self attachmentWithFontSize:fontSize insertionIndex:0]]];
+    
+    [self addTextViewWithText:oneLine
+                     fontSize:fontSize
+     regularExpressionPattern:@"(one)"
+                  attachments:@[[self attachmentWithFontSize:fontSize insertionIndex:5]]];
+    
+    [self addTextViewWithText:oneLine
+                     fontSize:fontSize
+     regularExpressionPattern:@"(line)" attachments:@[[self attachmentWithFontSize:fontSize insertionIndex:2],
+                                                     [self attachmentWithFontSize:fontSize insertionIndex:12]]];
+    
+    [self addTextViewWithText:multiLine
+                     fontSize:fontSize
+     regularExpressionPattern:@"(multi)"
+                  attachments:@[[self attachmentWithFontSize:fontSize insertionIndex:1],
+                                [self attachmentWithFontSize:fontSize insertionIndex:1],
+                                [self attachmentWithFontSize:fontSize insertionIndex:10],
+                                [self attachmentWithFontSize:fontSize insertionIndex:24],
+                                [self attachmentWithFontSize:fontSize insertionIndex:29],
+                                [self attachmentWithFontSize:fontSize insertionIndex:40],
+                                [self attachmentWithFontSize:fontSize insertionIndex:56],
+                                [self attachmentWithFontSize:fontSize insertionIndex:71],
+                                [self attachmentWithFontSize:fontSize insertionIndex:94],
+                                [self attachmentWithFontSize:fontSize insertionIndex:111]]];
 }
 
-- (void)setupTextView
+- (Attachment*)attachmentWithFontSize:(CGFloat)fontSize insertionIndex:(NSUInteger)insertionIndex
 {
-    UIFont *font = [UIFont systemFontOfSize:25.];
-    CFStringRef fontName = (__bridge CFStringRef)font.fontName;
-    CGFloat fontSize = font.pointSize;
-	CTFontRef ctfont = CTFontCreateWithName(fontName, fontSize, NULL);
+    UIFont *font = [self fontWithSize:fontSize];
+    CGFloat imgSize = font.ascender - font.descender;
+    UIImage *img = [UIImage ys_imageFromColor:[UIColor redColor] withSize:CGSizeMake(imgSize, imgSize)];
+    Attachment *attachment = [[Attachment alloc] initWithObject:img ascent:font.ascender descent:font.descender];
+    attachment.insertionIndex = insertionIndex;
+    return attachment;
+}
+
+- (UIFont*)fontWithSize:(CGFloat)size
+{
+    return [UIFont systemFontOfSize:size];
+}
+
+- (void)addHighlightWithRegularExpressionPattern:(NSString*)pattern colors:(NSArray*)colors toLayout:(YSCoreTextLayout*)layout
+{
+    if (pattern == nil) return;
     
-    NSString *text = @"Simple drawing of the CoreText.";
-    
-    YSCoreTextLayout *layout = [[YSCoreTextLayout alloc] initWithConstraintSize:CGSizeMake(self.textView.bounds.size.width, CGFLOAT_MAX)
-                                attributedString:[[NSAttributedString alloc] initWithString:text
-                                                                                 attributes:@{(id)kCTFontAttributeName : (__bridge id)ctfont,
-                                                                                              (id)kCTForegroundColorAttributeName : (__bridge id)[UIColor blueColor].CGColor}]];
-    CFRelease(ctfont);
-    
-    NSRegularExpression *reg = [NSRegularExpression regularExpressionWithPattern:@"(Simple)|(the Core)"
+    NSString *text = layout.attributedString.string;
+    NSRegularExpression *reg = [NSRegularExpression regularExpressionWithPattern:pattern
 																		 options:0
 																		   error:nil];
 	NSArray *array = [reg matchesInString:text options:0 range:NSMakeRange(0, text.length)];
-    NSMutableArray *hightlight = [NSMutableArray arrayWithCapacity:[array count]];
+    NSMutableArray *highlight = [NSMutableArray arrayWithCapacity:[array count]];
     for (NSTextCheckingResult *result in array) {
-		if ([result numberOfRanges]) {
-			if ([result rangeAtIndex:1].length) {
-                [hightlight addObject:[YSCoreTextHighlight highlightWithRange:result.range
-                                                                        color:[[UIColor blueColor] colorWithAlphaComponent:0.4]]];
-            }
-            if ([result rangeAtIndex:2].length) {
-                [hightlight addObject:[YSCoreTextHighlight highlightWithRange:result.range
-                                                                        color:[[UIColor greenColor] colorWithAlphaComponent:0.4]]];
+        for (int i = 1; i < [result numberOfRanges]; i++) {
+            NSLog(@"i = %@, %@", @(i), @([result numberOfRanges]));
+            if ([result numberOfRanges] > 1 && [result rangeAtIndex:i].location != NSNotFound) {
+                [highlight addObject:[YSCoreTextHighlight highlightWithRange:result.range
+                                                                       color:colors[i - 1]]];
             }
         }
     }
-    layout.hightlight = hightlight;
-    
-    CGRect frame = self.textView.frame;
-    frame.size = layout.size;
-    self.textView.frame = frame;
-    self.textView.layout = layout;
+    layout.highlight = highlight;
 }
 
-- (void)setupTextView2
+- (NSArray*)highlightColors
 {
-    NSString *str;
-    str = @"Simple".mutableCopy;
-//    str = @"Simple drawing of the CoreText. Simple drawing of the CoreText. Simple drawing of the CoreText. Simple drawing of the CoreText. ".mutableCopy;
-    NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:str];
-    
-    UIFont *font = [UIFont systemFontOfSize:20.];
-    CFStringRef fontName = (__bridge CFStringRef)font.fontName;
-    CGFloat fontSize = font.pointSize;
-	CTFontRef ctfont = CTFontCreateWithName(fontName, fontSize, NULL);
-    
-    [attrStr addAttribute:(id)kCTFontAttributeName value:(__bridge id)ctfont range:NSMakeRange(0, attrStr.length)];
-//    [attrStr addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, attrStr.length)];
-    
-    NSRegularExpression *reg;
-    
-    UIImage *img;
-//    img = [UIImage imageNamed:@"cat10x10"];
-//    img = [UIImage imageNamed:@"cat40x40"];
-    CGFloat imgSize = font.ascender - font.descender;
-    img = [UIImage ys_imageFromColor:[UIColor purpleColor] withSize:CGSizeMake(imgSize, imgSize)];
-#if 1
-    #if 1
-    YSCoreTextAttachmentImage *attachment = [YSCoreTextAttachmentImage insertImage:img
-                                                                        withAscent:font.ascender
-                                                                           descent:font.descender
-                                                                           atIndex:0
-                                                                toAttributedString:attrStr];
-    #if 0
-    attachment.contentInset = UIEdgeInsetsMake(10.f, 10.f, 10.f, 10.f);
-    [attachment configureAlignmentCenter];
-    UIEdgeInsets edgeInsets = attachment.contentEdgeInsets;
-    edgeInsets.top = attachment.contentInset.top;
-    attachment.contentEdgeInsets = edgeInsets;
-    #endif
+    return @[[[UIColor blueColor] colorWithAlphaComponent:0.4f],
+             [[UIColor greenColor] colorWithAlphaComponent:0.4f],
+             [[UIColor redColor] colorWithAlphaComponent:0.4f]];
+}
 
-    #else
-    reg = [NSRegularExpression regularExpressionWithPattern:@"[\\w]*( )[\\w]*"
-																		 options:0
-																		   error:nil];
-    NSTextCheckingResult *result;
-    do {
-        result = [reg firstMatchInString:attrStr.string options:0 range:NSMakeRange(0, attrStr.length)];
-        if ([result numberOfRanges] > 1) {
-            NSRange range = [result rangeAtIndex:1];
-            [attrStr replaceCharactersInRange:range withString:@""];
-            YSCoreTextAttachmentImage *attachment = [YSCoreTextAttachmentImage insertImage:img
-                                                                                withAscent:font.ascender
-                                                                                   descent:font.descender
-                                                                                   atIndex:range.location
-                                                                        toAttributedString:attrStr];
-            attachment.contentInset = UIEdgeInsetsMake(0.f, 3.f, 0.f, 3.f);
-            [attachment configureAlignmentCenter];
-//            attachment.contentEdgeInsets = UIEdgeInsetsMake(0.f, attachment.contentInset.left, 0.f, 0.f);
-        }
-    } while (result.numberOfRanges != 0);
-    #endif
-#endif
-    YSCoreTextLayout *layout = [[YSCoreTextLayout alloc] initWithConstraintSize:self.textView2.bounds.size attributedString:attrStr];
+- (void)addTextViewWithText:(NSString*)text
+                   fontSize:(CGFloat)fontSize
+   regularExpressionPattern:(NSString*)pattern
+                attachments:(NSArray*)attachments
+{
+    CGFloat x = 10.f;
     
-#if 1
-    reg = [NSRegularExpression regularExpressionWithPattern:@"(Simple drawing)"
-                                                    options:0
-                                                      error:nil];
-	NSArray *array = [reg matchesInString:attrStr.string options:0 range:NSMakeRange(0, attrStr.length)];
-    NSMutableArray *hightlight = [NSMutableArray arrayWithCapacity:[array count]];
-    for (NSTextCheckingResult *result in array) {
-		if ([result numberOfRanges]) {
-			if ([result rangeAtIndex:1].length) {
-                [hightlight addObject:[YSCoreTextHighlight highlightWithRange:result.range
-                                                                        color:[[UIColor blueColor] colorWithAlphaComponent:0.4]]];
-                NSLog(@"%@", [attrStr.string substringWithRange:[result rangeAtIndex:1]]);
-            }
-        }
+    YSCoreTextView *textView = [[YSCoreTextView alloc] init];
+    textView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:textView];
+    
+    UIFont *font = [self fontWithSize:fontSize];
+    
+    NSMutableAttributedString *str = [[NSAttributedString alloc] initWithString:text
+                                                                     attributes:@{NSFontAttributeName : font}].mutableCopy;
+    
+    for (Attachment *attachment in attachments) {
+        [[attachment class] insertAttachment:attachment
+                                     atIndex:attachment.insertionIndex
+                          toAttributedString:str];
     }
-    layout.hightlight = hightlight;
-#endif
     
-    self.textView2.layout = layout;
+    YSCoreTextLayout *layout = [[YSCoreTextLayout alloc] initWithConstraintSize:CGSizeMake(self.view.bounds.size.width - x*2.f,
+                                                                                           CGFLOAT_MAX)
+                                                               attributedString:str];
     
-    CGRect frame = self.textView2.frame;
-    frame.size = layout.size;
-    self.textView2.frame = frame;
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    [self addHighlightWithRegularExpressionPattern:pattern colors:[self highlightColors] toLayout:layout];
+    
+    textView.layout = layout;
+    [textView sizeToFit];
+    
+    CGRect frame = textView.frame;
+    frame.origin.x = x;
+    frame.origin.y = self.y;
+    textView.frame = frame;
+    
+    self.y = CGRectGetMaxY(textView.frame) + 10.f;
 }
 
 @end
