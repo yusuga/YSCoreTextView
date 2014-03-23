@@ -11,19 +11,16 @@
 @interface YSCoreTextAttachmentImage : YSCoreTextAttachment
 
 + (YSCoreTextAttachmentImage*)appendImage:(UIImage*)image
-                               withAscent:(CGFloat)ascent
-                                  descent:(CGFloat)descent
+                                 withFont:(UIFont*)font
                        toAttributedString:(NSMutableAttributedString*)attributedString;
 
 + (YSCoreTextAttachmentImage*)insertImage:(UIImage*)image
-                               withAscent:(CGFloat)ascent
-                                  descent:(CGFloat)descent
+                                 withFont:(UIFont*)font
                                   atIndex:(NSUInteger)index
                        toAttributedString:(NSMutableAttributedString*)attributedString;
 
-- (instancetype)initWithObject:(UIImage*)image
-                        ascent:(CGFloat)ascent
-                       descent:(CGFloat)descent;
+- (instancetype)initWithImage:(UIImage*)image
+                         font:(UIFont*)font;
 
 /* YSCoreTextAttachmentProtocol */
 + (void)insertAttachment:(YSCoreTextAttachmentImage*)attachment

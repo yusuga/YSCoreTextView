@@ -77,7 +77,7 @@
     UIFont *font = [self fontWithSize:fontSize];
     CGFloat imgSize = font.ascender - font.descender;
     UIImage *img = [UIImage ys_imageFromColor:[UIColor redColor] withSize:CGSizeMake(imgSize, imgSize)];
-    Attachment *attachment = [[Attachment alloc] initWithObject:img ascent:font.ascender descent:font.descender];
+    Attachment *attachment = [[Attachment alloc] initWithImage:img font:font];
     attachment.insertionIndex = insertionIndex;
     return attachment;
 }

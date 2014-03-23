@@ -16,26 +16,22 @@
 @synthesize drawPoint = _drawPoint;
 
 + (YSCoreTextAttachmentImage*)appendImage:(UIImage *)image
-                               withAscent:(CGFloat)ascent
-                                  descent:(CGFloat)descent
+                                 withFont:(UIFont *)font
                        toAttributedString:(NSMutableAttributedString *)attributedString
 {
     return [self insertImage:image
-                  withAscent:ascent
-                     descent:descent
+                    withFont:font
                      atIndex:attributedString.length
           toAttributedString:attributedString];
 }
 
 + (YSCoreTextAttachmentImage*)insertImage:(UIImage*)image
-                               withAscent:(CGFloat)ascent
-                                  descent:(CGFloat)descent
+                                 withFont:(UIFont *)font
                                   atIndex:(NSUInteger)index
                        toAttributedString:(NSMutableAttributedString *)attributedString
 {
-    YSCoreTextAttachmentImage *attachment = [[YSCoreTextAttachmentImage alloc] initWithObject:image
-                                                                                       ascent:ascent
-                                                                                      descent:descent];
+    YSCoreTextAttachmentImage *attachment = [[YSCoreTextAttachmentImage alloc] initWithImage:image
+                                                                                        font:font];
     
     [self insertAttachment:attachment atIndex:index toAttributedString:attributedString];
     return attachment;
@@ -59,15 +55,14 @@
     }
 }
 
-- (id)initWithObject:(UIImage*)image
-              ascent:(CGFloat)ascent
-             descent:(CGFloat)descent
+- (id)initWithImage:(UIImage *)image
+               font:(UIFont *)font
 {
     self = [super init];
     if (self) {
         _object = image;
-        _ascent = ascent;
-        _descent = descent;
+        _ascent = font.ascender;
+        _descent = font.descender;
         _width = image.size.width;
         self.contentInset = UIEdgeInsetsZero;
         self.contentEdgeInsets = UIEdgeInsetsZero;
