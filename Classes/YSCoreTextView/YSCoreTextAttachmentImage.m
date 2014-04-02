@@ -68,6 +68,8 @@
     if (self = [super init]) {
         _object = image;
         _width = image.size.width;
+        _ascent = ascent;
+        _descent = descent;
         self.contentInset = UIEdgeInsetsZero;
         self.contentEdgeInsets = UIEdgeInsetsZero;
     }
