@@ -58,11 +58,15 @@
 - (id)initWithImage:(UIImage *)image
                font:(UIFont *)font
 {
-    self = [super init];
-    if (self) {
+    return [self initWithImage:image ascent:font.ascender descent:font.descender];
+}
+
+- (instancetype)initWithImage:(UIImage*)image
+                       ascent:(CGFloat)ascent
+                      descent:(CGFloat)descent
+{
+    if (self = [super init]) {
         _object = image;
-        _ascent = font.ascender;
-        _descent = font.descender;
         _width = image.size.width;
         self.contentInset = UIEdgeInsetsZero;
         self.contentEdgeInsets = UIEdgeInsetsZero;

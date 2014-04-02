@@ -22,6 +22,10 @@
 - (instancetype)initWithImage:(UIImage*)image
                          font:(UIFont*)font;
 
+- (instancetype)initWithImage:(UIImage*)image
+                       ascent:(CGFloat)ascent
+                      descent:(CGFloat)descent;
+
 /* YSCoreTextAttachmentProtocol */
 + (void)insertAttachment:(YSCoreTextAttachmentImage*)attachment
                  atIndex:(NSUInteger)index
