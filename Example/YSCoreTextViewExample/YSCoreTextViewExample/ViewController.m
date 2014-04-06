@@ -31,7 +31,18 @@
     [super viewDidLoad];
 
     self.y = 20.f;
-    CGFloat fontSize = 13.f;
+    CGFloat fontSize;
+    fontSize = 6;
+    fontSize = 10;
+    
+#define MinimumFontTest 1
+    
+#if MinimumFontTest
+    while ([self fontWithSize:fontSize].lineHeight < [YSCoreTextLayout minimumHightWhenAttachmentWasAdded]) {
+        fontSize += 0.5f;
+    }
+#endif
+    NSLog(@"fontSize: %f", fontSize);
     
     NSString *oneLine = @"one line highlight";
     NSString *multiLine = @"multi line highlight. multi line highlight. multi line highlight. multi line highlight. multi line highlight. multi line highlight.";
@@ -99,7 +110,6 @@
     NSMutableArray *highlight = [NSMutableArray arrayWithCapacity:[array count]];
     for (NSTextCheckingResult *result in array) {
         for (int i = 1; i < [result numberOfRanges]; i++) {
-            NSLog(@"i = %@, %@", @(i), @([result numberOfRanges]));
             if ([result numberOfRanges] > 1 && [result rangeAtIndex:i].location != NSNotFound) {
                 [highlight addObject:[YSCoreTextHighlight highlightWithRange:result.range
                                                                        color:colors[i - 1]]];
@@ -138,8 +148,10 @@
                           toAttributedString:str];
     }
     
-    YSCoreTextLayout *layout = [[YSCoreTextLayout alloc] initWithConstraintSize:CGSizeMake(self.view.bounds.size.width - x*2.f,
-                                                                                           CGFLOAT_MAX)
+    CGSize constraintSize = CGSizeMake(self.view.bounds.size.width - x*2.f,
+                                       CGFLOAT_MAX);
+    
+    YSCoreTextLayout *layout = [[YSCoreTextLayout alloc] initWithConstraintSize:constraintSize
                                                                attributedString:str];
     
     [self addHighlightWithRegularExpressionPattern:pattern colors:[self highlightColors] toLayout:layout];
