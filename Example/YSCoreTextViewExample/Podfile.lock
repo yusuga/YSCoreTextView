@@ -1,10 +1,13 @@
 PODS:
+  - YSImageFilter (0.0.5)
   - YSUIKitAdditions (0.0.8)
 
 DEPENDENCIES:
+  - YSImageFilter
   - YSUIKitAdditions
 
 SPEC CHECKSUMS:
+  YSImageFilter: 1173fda04f4d166c752114a309f140cf0b62f732
   YSUIKitAdditions: 1d15576e0c7d90bc74444132fd75e8944184f2b6
 
 COCOAPODS: 0.29.0

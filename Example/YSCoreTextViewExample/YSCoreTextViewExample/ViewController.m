@@ -10,6 +10,7 @@
 #import "YSCoreTextView.h"
 
 #import <YSUIKitAdditions/UIImage+YSUIKitAdditions.h>
+#import <YSImageFilter/YSImageFilter.h>
 
 @interface Attachment : YSCoreTextAttachmentImage
 @property (nonatomic) NSUInteger insertionIndex;
@@ -32,21 +33,17 @@
 
     self.y = 20.f;
     CGFloat fontSize;
-    fontSize = 6;
-    fontSize = 10;
-    
-#define MinimumFontTest 1
-    
-#if MinimumFontTest
-    while ([self fontWithSize:fontSize].lineHeight < [YSCoreTextLayout minimumHightWhenAttachmentWasAdded]) {
-        fontSize += 0.5f;
-    }
-#endif
+//    fontSize = 4;
+//    fontSize = 6;
+//    fontSize = 8;
+//    fontSize = 10;
+    fontSize = 13;
+//    fontSize = 18;
     NSLog(@"fontSize: %f", fontSize);
     
     NSString *oneLine = @"one line highlight";
     NSString *multiLine = @"multi line highlight. multi line highlight. multi line highlight. multi line highlight. multi line highlight. multi line highlight.";
-    
+        
     [self addTextViewWithText:oneLine fontSize:fontSize regularExpressionPattern:@"(one)" attachments:nil];
     [self addTextViewWithText:oneLine fontSize:fontSize regularExpressionPattern:@"(line)" attachments:nil];
     [self addTextViewWithText:oneLine fontSize:fontSize regularExpressionPattern:@"(hli)" attachments:nil];
@@ -88,6 +85,7 @@
     UIFont *font = [self fontWithSize:fontSize];
     CGFloat imgSize = font.ascender - font.descender;
     UIImage *img = [UIImage ys_imageFromColor:[UIColor redColor] withSize:CGSizeMake(imgSize, imgSize)];
+    img = [YSImageFilter resizeWithImage:img size:img.size quality:kCGInterpolationHigh trimToFit:NO mask:YSImageFilterMaskCircle];
     Attachment *attachment = [[Attachment alloc] initWithImage:img font:font];
     attachment.insertionIndex = insertionIndex;
     return attachment;
@@ -138,7 +136,7 @@
     [self.view addSubview:textView];
     
     UIFont *font = [self fontWithSize:fontSize];
-    
+
     NSMutableAttributedString *str = [[NSAttributedString alloc] initWithString:text
                                                                      attributes:@{NSFontAttributeName : font}].mutableCopy;
     
