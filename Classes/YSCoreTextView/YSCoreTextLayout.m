@@ -19,6 +19,8 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
 #endif
 }
 
+static CGFloat const kMinimumHightWhenAttachmentWasAdded = 15.f;
+
 @interface YSCoreTextLayout ()
 
 @property (nonatomic) NSMutableArray *attachments;
@@ -35,11 +37,10 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
         
         CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)attributedString);
         _size = CTFramesetterSuggestFrameSizeWithConstraints(framesetter,
-                                                                   CFRangeMake(0, attributedString.length),
-                                                                   NULL,
-                                                                   constraintSize,
-                                                                   NULL);
-        
+                                                             CFRangeMake(0, attributedString.length),
+                                                             NULL,
+                                                             constraintSize,
+                                                             NULL);
         CGMutablePathRef path = CGPathCreateMutable();
         CGRect pathRect = CGRectZero;
         pathRect.size = self.size;
@@ -206,6 +207,13 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
         }
     }
 	return [NSArray arrayWithArray:fragmentRects];
+}
+
+#pragma mark - 
+
++ (CGFloat)minimumHightWhenAttachmentWasAdded;
+{
+    return kMinimumHightWhenAttachmentWasAdded;
 }
 
 @end
