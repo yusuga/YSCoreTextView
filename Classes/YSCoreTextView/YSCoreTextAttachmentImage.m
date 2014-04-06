@@ -76,15 +76,6 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
     }
 }
 
-- (CTParagraphStyleRef)CTParagraphStyleCreate
-{
-    CGFloat lineHeight = self.ascent - self.descent;
-    CTParagraphStyleSetting setting[] = {
-        { kCTParagraphStyleSpecifierMaximumLineHeight, sizeof(lineHeight), &lineHeight }
-    };
-    return CTParagraphStyleCreate(setting, sizeof(setting) / sizeof(CTParagraphStyleSetting));
-}
-
 - (id)initWithImage:(UIImage *)image
                font:(UIFont *)font
 {

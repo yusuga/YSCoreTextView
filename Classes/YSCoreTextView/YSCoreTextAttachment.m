@@ -65,6 +65,15 @@ static CGFloat RunDelegateGetWidthCallback(void *refCon)
     [self setContentEdgeInsets:edgeInsets];
 }
 
+- (CTParagraphStyleRef)CTParagraphStyleCreate
+{
+    CGFloat lineHeight = self.ascent - self.descent;
+    CTParagraphStyleSetting setting[] = {
+        { kCTParagraphStyleSpecifierMaximumLineHeight, sizeof(lineHeight), &lineHeight }
+    };
+    return CTParagraphStyleCreate(setting, sizeof(setting) / sizeof(CTParagraphStyleSetting));
+}
+
 #pragma mark - YSCoreTextAttachmentProtocol required method
 
 + (void)insertAttachment:(id)attachment
