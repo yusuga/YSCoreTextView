@@ -22,6 +22,4 @@
 
 - (void)drawInContext:(CGContextRef)context;
 
-+ (CGFloat)minimumHightWhenAttachmentWasAdded;
-
 @end

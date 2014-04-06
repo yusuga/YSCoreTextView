@@ -9,6 +9,22 @@
 #import "YSCoreTextAttachmentImage.h"
 #import "YSCoreTextConstants.h"
 
+static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
+#if defined(__LP64__) && __LP64__
+    return ceil(cgfloat);
+#else
+    return ceilf(cgfloat);
+#endif
+}
+
+static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
+#if defined(__LP64__) && __LP64__
+    return floor(cgfloat);
+#else
+    return floorf(cgfloat);
+#endif
+}
+
 @implementation YSCoreTextAttachmentImage
 @synthesize ascent = _ascent;
 @synthesize descent = _descent;
@@ -43,10 +59,21 @@
 {
     CTRunDelegateCallbacks callbacks = attachment.callbacks;
     CTRunDelegateRef runDelegate = CTRunDelegateCreate(&callbacks, (__bridge void *)attachment);
+    
+    // ParagraphStyle
+    CGFloat lineHeight = attachment.ascent - attachment.descent;
+    CTParagraphStyleSetting setting[] = {
+        { kCTParagraphStyleSpecifierMaximumLineHeight, sizeof(lineHeight), &lineHeight }
+    };
+
+    CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(setting, sizeof(setting) / sizeof(CTParagraphStyleSetting));
     NSAttributedString *attachmentStr = [[NSAttributedString alloc] initWithString:OBJECT_REPLACEMENT_CHARACTER
                                                                         attributes:@{(id)kCTRunDelegateAttributeName : (__bridge id)runDelegate,
-                                                                                     kYSCoreTextAttachment : attachment}];
+                                                                                     kYSCoreTextAttachment : attachment,
+                                                                                     (id)kCTParagraphStyleAttributeName : (__bridge id)paragraphStyle}];
+    
     CFRelease(runDelegate);
+    CFRelease(paragraphStyle);
     
     if (attributedString.length <= index) {
         [attributedString appendAttributedString:attachmentStr];
@@ -68,8 +95,9 @@
     if (self = [super init]) {
         _object = image;
         _width = image.size.width;
-        _ascent = ascent;
-        _descent = descent;
+        _ascent = CGFloat_ceil(ascent);
+        _descent = CGFloat_floor(descent);
+        
         self.contentInset = UIEdgeInsetsZero;
         self.contentEdgeInsets = UIEdgeInsetsZero;
     }
