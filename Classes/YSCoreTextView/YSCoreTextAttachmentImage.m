@@ -60,13 +60,7 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
     CTRunDelegateCallbacks callbacks = attachment.callbacks;
     CTRunDelegateRef runDelegate = CTRunDelegateCreate(&callbacks, (__bridge void *)attachment);
     
-    // ParagraphStyle
-    CGFloat lineHeight = attachment.ascent - attachment.descent;
-    CTParagraphStyleSetting setting[] = {
-        { kCTParagraphStyleSpecifierMaximumLineHeight, sizeof(lineHeight), &lineHeight }
-    };
-
-    CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(setting, sizeof(setting) / sizeof(CTParagraphStyleSetting));
+    CTParagraphStyleRef paragraphStyle = [attachment CTParagraphStyleCreate];
     NSAttributedString *attachmentStr = [[NSAttributedString alloc] initWithString:OBJECT_REPLACEMENT_CHARACTER
                                                                         attributes:@{(id)kCTRunDelegateAttributeName : (__bridge id)runDelegate,
                                                                                      kYSCoreTextAttachment : attachment,
@@ -80,6 +74,15 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
     } else {
         [attributedString insertAttributedString:attachmentStr atIndex:index];
     }
+}
+
+- (CTParagraphStyleRef)CTParagraphStyleCreate
+{
+    CGFloat lineHeight = self.ascent - self.descent;
+    CTParagraphStyleSetting setting[] = {
+        { kCTParagraphStyleSpecifierMaximumLineHeight, sizeof(lineHeight), &lineHeight }
+    };
+    return CTParagraphStyleCreate(setting, sizeof(setting) / sizeof(CTParagraphStyleSetting));
 }
 
 - (id)initWithImage:(UIImage *)image

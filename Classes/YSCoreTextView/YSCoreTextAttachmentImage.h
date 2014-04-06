@@ -26,6 +26,8 @@
                        ascent:(CGFloat)ascent
                       descent:(CGFloat)descent;
 
+- (CTParagraphStyleRef)CTParagraphStyleCreate;
+
 /* YSCoreTextAttachmentProtocol */
 + (void)insertAttachment:(YSCoreTextAttachmentImage*)attachment
                  atIndex:(NSUInteger)index
