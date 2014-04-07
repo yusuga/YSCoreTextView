@@ -12,6 +12,22 @@
 #import <YSUIKitAdditions/UIImage+YSUIKitAdditions.h>
 #import <YSImageFilter/YSImageFilter.h>
 
+static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
+#if defined(__LP64__) && __LP64__
+    return ceil(cgfloat);
+#else
+    return ceilf(cgfloat);
+#endif
+}
+
+static inline CGFLOAT_TYPE CGFloat_round(CGFLOAT_TYPE cgfloat) {
+#if defined(__LP64__) && __LP64__
+    return round(cgfloat);
+#else
+    return roundf(cgfloat);
+#endif
+}
+
 @interface Attachment : YSCoreTextAttachmentImage
 @property (nonatomic) NSUInteger insertionIndex;
 @end
@@ -31,19 +47,35 @@
 {
     [super viewDidLoad];
 
+    UISlider *slider = [[UISlider alloc] initWithFrame:CGRectMake(0.f, 0.f, 280.f, 0.f)];
+    [slider sizeToFit];
+    slider.minimumValue = 1.f;
+    slider.maximumValue = 50.f;
+    slider.value = 13.f;
+    [slider addTarget:self action:@selector(sliderDidChange:) forControlEvents:UIControlEventValueChanged];
+    self.toolbarItems = @[[[UIBarButtonItem alloc] initWithCustomView:slider]];
+    [self updateTextViewsWithFontSize:slider.value];
+}
+
+- (void)sliderDidChange:(UISlider*)slider
+{
+    CGFloat newValue = CGFloat_round(slider.value);
+    slider.value = newValue;
+    NSLog(@"fontSize: %f", slider.value);
+    [self updateTextViewsWithFontSize:slider.value];
+}
+
+- (void)updateTextViewsWithFontSize:(CGFloat)fontSize
+{
+    for (UIView *subView in self.view.subviews) {
+        [subView removeFromSuperview];
+    }
+    
     self.y = 20.f;
-    CGFloat fontSize;
-//    fontSize = 4;
-//    fontSize = 6;
-//    fontSize = 8;
-//    fontSize = 10;
-    fontSize = 13;
-//    fontSize = 18;
-    NSLog(@"fontSize: %f", fontSize);
     
     NSString *oneLine = @"one line highlight";
     NSString *multiLine = @"multi line highlight. multi line highlight. multi line highlight. multi line highlight. multi line highlight. multi line highlight.";
-        
+    
     [self addTextViewWithText:oneLine fontSize:fontSize regularExpressionPattern:@"(one)" attachments:nil];
     [self addTextViewWithText:oneLine fontSize:fontSize regularExpressionPattern:@"(line)" attachments:nil];
     [self addTextViewWithText:oneLine fontSize:fontSize regularExpressionPattern:@"(hli)" attachments:nil];
@@ -63,7 +95,7 @@
     [self addTextViewWithText:oneLine
                      fontSize:fontSize
      regularExpressionPattern:@"(line)" attachments:@[[self attachmentWithFontSize:fontSize insertionIndex:2],
-                                                     [self attachmentWithFontSize:fontSize insertionIndex:12]]];
+                                                      [self attachmentWithFontSize:fontSize insertionIndex:12]]];
     
     [self addTextViewWithText:multiLine
                      fontSize:fontSize
@@ -86,7 +118,11 @@
     CGFloat imgSize = font.ascender - font.descender;
     UIImage *img = [UIImage ys_imageFromColor:[UIColor redColor] withSize:CGSizeMake(imgSize, imgSize)];
     img = [YSImageFilter resizeWithImage:img size:img.size quality:kCGInterpolationHigh trimToFit:NO mask:YSImageFilterMaskCircle];
-    Attachment *attachment = [[Attachment alloc] initWithImage:img font:font paragraphStyle:NULL];
+    CTParagraphStyleRef style = [self CTParagraphStyleCreateWithFont:font];
+    Attachment *attachment = [[Attachment alloc] initWithImage:img font:font paragraphStyle:style];
+    if (style) {
+        CFRelease(style);
+    }
     attachment.insertionIndex = insertionIndex;
     return attachment;
 }
@@ -124,6 +160,15 @@
              [[UIColor redColor] colorWithAlphaComponent:0.4f]];
 }
 
+- (CTParagraphStyleRef)CTParagraphStyleCreateWithFont:(UIFont*)font
+{
+    CGFloat lineHeight = CGFloat_ceil(font.lineHeight);
+    CTParagraphStyleSetting setting[] = {
+        { kCTParagraphStyleSpecifierMaximumLineHeight, sizeof(lineHeight), &lineHeight }
+    };
+    return CTParagraphStyleCreate(setting, sizeof(setting) / sizeof(CTParagraphStyleSetting));
+}
+
 - (void)addTextViewWithText:(NSString*)text
                    fontSize:(CGFloat)fontSize
    regularExpressionPattern:(NSString*)pattern
@@ -136,9 +181,16 @@
     [self.view addSubview:textView];
     
     UIFont *font = [self fontWithSize:fontSize];
+    
+    CTParagraphStyleRef style = [self CTParagraphStyleCreateWithFont:font];
 
     NSMutableAttributedString *str = [[NSAttributedString alloc] initWithString:text
-                                                                     attributes:@{NSFontAttributeName : font}].mutableCopy;
+                                                                     attributes:@{NSFontAttributeName : font,
+                                                                                  (id)kCTParagraphStyleAttributeName : (__bridge id)style}].mutableCopy;
+    
+    if (style) {
+        CFRelease(style);
+    }
     
     for (Attachment *attachment in attachments) {
         [[attachment class] insertAttachment:attachment
