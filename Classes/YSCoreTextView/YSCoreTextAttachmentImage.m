@@ -9,22 +9,6 @@
 #import "YSCoreTextAttachmentImage.h"
 #import "YSCoreTextConstants.h"
 
-static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
-#if defined(__LP64__) && __LP64__
-    return ceil(cgfloat);
-#else
-    return ceilf(cgfloat);
-#endif
-}
-
-static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
-#if defined(__LP64__) && __LP64__
-    return floor(cgfloat);
-#else
-    return floorf(cgfloat);
-#endif
-}
-
 @implementation YSCoreTextAttachmentImage
 @synthesize ascent = _ascent;
 @synthesize descent = _descent;
@@ -49,26 +33,24 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
     if (self = [super init]) {
         _object = image;
         _width = image.size.width;
-        _ascent = CGFloat_ceil(ascent);
-        _descent = CGFloat_floor(descent);
+        _ascent = ascent;
+        _descent = descent;
         
         self.contentInset = UIEdgeInsetsZero;
         self.contentEdgeInsets = UIEdgeInsetsZero;
         
         CTRunDelegateCallbacks callbacks = self.callbacks;
         CTRunDelegateRef runDelegate = CTRunDelegateCreate(&callbacks, (__bridge void *)self);
-        NSDictionary *attr;
+        
+        NSMutableDictionary *attr = @{(id)kCTRunDelegateAttributeName : (__bridge id)runDelegate,
+                                      kYSCoreTextAttachment : self}.mutableCopy;
+        SAFE_CFRELEASE(runDelegate);
+        
         if (paragraphStyle) {
-            attr = @{(id)kCTRunDelegateAttributeName : (__bridge id)runDelegate,
-                     kYSCoreTextAttachment : self,
-                     (id)kCTParagraphStyleAttributeName : (__bridge id)paragraphStyle};
-        } else {
-            attr = @{(id)kCTRunDelegateAttributeName : (__bridge id)runDelegate,
-                     kYSCoreTextAttachment : self};
+            [attr setObject:(__bridge id)paragraphStyle forKey:(id)kCTParagraphStyleAttributeName];
         }
         _attachmentString = [[NSAttributedString alloc] initWithString:OBJECT_REPLACEMENT_CHARACTER
                                                             attributes:attr];
-        CFRelease(runDelegate);
     }
     return self;
 }

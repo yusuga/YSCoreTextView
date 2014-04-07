@@ -11,14 +11,6 @@
 #import "YSCoreTextConstants.h"
 #import "YSCoreTextAttachmentProtocol.h"
 
-static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
-#if defined(__LP64__) && __LP64__
-    return ceil(cgfloat);
-#else
-    return ceilf(cgfloat);
-#endif
-}
-
 @interface YSCoreTextLayout ()
 
 @property (nonatomic) NSMutableArray *attachments;
@@ -89,7 +81,8 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
                 CFRange runRange = CTRunGetStringRange(run);
                 CGFloat ascent, descent, leading;
                 width = CTRunGetTypographicBounds(run, CFRangeMake(0, runRange.length), &ascent, &descent, &leading);
-                attachment.drawPoint = CGPointMake(currentX, self.size.height - origin.y - ascent);
+                attachment.drawPoint = CGPointMake(currentX,
+                                                   self.size.height - origin.y - ascent);
                 [attachments addObject:attachment];
             } else {
                 CGFloat adjustX = 0.f, adjustY = 0.f;
@@ -100,7 +93,9 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
                 }
                 CFRange runRange = CTRunGetStringRange(run);
                 width = CTRunGetTypographicBounds(run, CFRangeMake(0, runRange.length), NULL, NULL, NULL);
-                CGContextSetTextPosition(context, origin.x + adjustX, origin.y - adjustY);
+                CGContextSetTextPosition(context,
+                                         origin.x + adjustX,
+                                         origin.y - adjustY);
                 CTRunDraw(run, context, CFRangeMake(0, 0));
             }
             currentX += width;
@@ -181,10 +176,9 @@ static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
             CFIndex endIndex = startIndex + intersectionRange.length;
             CGFloat endOffset = CTLineGetOffsetForStringIndex(line, endIndex, NULL);
             CGFloat textWidth = endOffset - startOffset;
-            
             fragRect.origin.x = origin.x + startOffset;
-            fragRect.origin.y = CGFloat_ceil(origin.y - descent);
-            fragRect.size.height = CGFloat_ceil(ascent + descent);
+            fragRect.origin.y = origin.y - descent;
+            fragRect.size.height = ascent + descent;
             fragRect.origin.y = self.size.height - CGRectGetMaxY(fragRect);
             fragRect.size.width = textWidth;
         }
