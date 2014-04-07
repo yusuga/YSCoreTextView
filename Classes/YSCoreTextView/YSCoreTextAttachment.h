@@ -22,6 +22,4 @@
 @property (nonatomic, readonly) CTRunDelegateCallbacks callbacks;
 - (void)configureAlignmentCenter;
 
-- (CTParagraphStyleRef)CTParagraphStyleCreate;
-
 @end

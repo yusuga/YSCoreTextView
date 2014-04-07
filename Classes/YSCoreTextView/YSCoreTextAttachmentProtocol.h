@@ -10,9 +10,7 @@
 
 @protocol YSCoreTextAttachmentProtocol <NSObject>
 
-+ (void)insertAttachment:(id)attachment
-                 atIndex:(NSUInteger)index
-      toAttributedString:(NSMutableAttributedString *)attributedString;
+- (NSAttributedString*)attachmentString;
 
 - (CGFloat)ascent;
 - (CGFloat)descent;
@@ -20,6 +18,10 @@
 - (UIEdgeInsets)contentInset;
 
 @optional
++ (void)insertAttachment:(id<YSCoreTextAttachmentProtocol>)attachment
+                 atIndex:(NSUInteger)index
+      toAttributedString:(NSMutableAttributedString *)toAttributedString;
+
 - (UIEdgeInsets)contentEdgeInsets;
 - (void)setContentEdgeInsets:(UIEdgeInsets)insets;
 

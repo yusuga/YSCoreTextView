@@ -65,20 +65,17 @@ static CGFloat RunDelegateGetWidthCallback(void *refCon)
     [self setContentEdgeInsets:edgeInsets];
 }
 
-- (CTParagraphStyleRef)CTParagraphStyleCreate
++ (void)insertAttachment:(id<YSCoreTextAttachmentProtocol>)attachment
+                 atIndex:(NSUInteger)index
+      toAttributedString:(NSMutableAttributedString *)toAttributedString
 {
-    CGFloat lineHeight = self.ascent - self.descent;
-    CTParagraphStyleSetting setting[] = {
-        { kCTParagraphStyleSpecifierMaximumLineHeight, sizeof(lineHeight), &lineHeight }
-    };
-    return CTParagraphStyleCreate(setting, sizeof(setting) / sizeof(CTParagraphStyleSetting));
+    if (index > toAttributedString.length) index = toAttributedString.length;
+    [toAttributedString insertAttributedString:attachment.attachmentString atIndex:index];
 }
 
 #pragma mark - YSCoreTextAttachmentProtocol required method
 
-+ (void)insertAttachment:(id)attachment
-                 atIndex:(NSUInteger)index
-      toAttributedString:(NSMutableAttributedString *)attributedString
+- (NSAttributedString *)attributedString
 {
     abort();
 }

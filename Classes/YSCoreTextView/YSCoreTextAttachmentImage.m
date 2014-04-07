@@ -31,60 +31,20 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
 @synthesize width = _width;
 @synthesize drawPoint = _drawPoint;
 
-+ (YSCoreTextAttachmentImage*)appendImage:(UIImage *)image
-                                 withFont:(UIFont *)font
-                       toAttributedString:(NSMutableAttributedString *)attributedString
-{
-    return [self insertImage:image
-                    withFont:font
-                     atIndex:attributedString.length
-          toAttributedString:attributedString];
-}
-
-+ (YSCoreTextAttachmentImage*)insertImage:(UIImage*)image
-                                 withFont:(UIFont *)font
-                                  atIndex:(NSUInteger)index
-                       toAttributedString:(NSMutableAttributedString *)attributedString
-{
-    YSCoreTextAttachmentImage *attachment = [[YSCoreTextAttachmentImage alloc] initWithImage:image
-                                                                                        font:font];
-    
-    [self insertAttachment:attachment atIndex:index toAttributedString:attributedString];
-    return attachment;
-}
-
-+ (void)insertAttachment:(YSCoreTextAttachmentImage*)attachment
-                 atIndex:(NSUInteger)index
-      toAttributedString:(NSMutableAttributedString *)attributedString
-{
-    CTRunDelegateCallbacks callbacks = attachment.callbacks;
-    CTRunDelegateRef runDelegate = CTRunDelegateCreate(&callbacks, (__bridge void *)attachment);
-    
-    CTParagraphStyleRef paragraphStyle = [attachment CTParagraphStyleCreate];
-    NSAttributedString *attachmentStr = [[NSAttributedString alloc] initWithString:OBJECT_REPLACEMENT_CHARACTER
-                                                                        attributes:@{(id)kCTRunDelegateAttributeName : (__bridge id)runDelegate,
-                                                                                     kYSCoreTextAttachment : attachment,
-                                                                                     (id)kCTParagraphStyleAttributeName : (__bridge id)paragraphStyle}];
-    
-    CFRelease(runDelegate);
-    CFRelease(paragraphStyle);
-    
-    if (attributedString.length <= index) {
-        [attributedString appendAttributedString:attachmentStr];
-    } else {
-        [attributedString insertAttributedString:attachmentStr atIndex:index];
-    }
-}
-
 - (id)initWithImage:(UIImage *)image
                font:(UIFont *)font
+     paragraphStyle:(CTParagraphStyleRef)paragraphStyle
 {
-    return [self initWithImage:image ascent:font.ascender descent:font.descender];
+    return [self initWithImage:image
+                        ascent:font.ascender
+                       descent:font.descender
+                paragraphStyle:paragraphStyle];
 }
 
 - (instancetype)initWithImage:(UIImage*)image
                        ascent:(CGFloat)ascent
                       descent:(CGFloat)descent
+               paragraphStyle:(CTParagraphStyleRef)paragraphStyle
 {
     if (self = [super init]) {
         _object = image;
@@ -94,9 +54,26 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
         
         self.contentInset = UIEdgeInsetsZero;
         self.contentEdgeInsets = UIEdgeInsetsZero;
+        
+        CTRunDelegateCallbacks callbacks = self.callbacks;
+        CTRunDelegateRef runDelegate = CTRunDelegateCreate(&callbacks, (__bridge void *)self);
+        NSDictionary *attr;
+        if (paragraphStyle) {
+            attr = @{(id)kCTRunDelegateAttributeName : (__bridge id)runDelegate,
+                     kYSCoreTextAttachment : self,
+                     (id)kCTParagraphStyleAttributeName : (__bridge id)paragraphStyle};
+        } else {
+            attr = @{(id)kCTRunDelegateAttributeName : (__bridge id)runDelegate,
+                     kYSCoreTextAttachment : self};
+        }
+        _attachmentString = [[NSAttributedString alloc] initWithString:OBJECT_REPLACEMENT_CHARACTER
+                                                            attributes:attr];
+        CFRelease(runDelegate);
     }
     return self;
 }
+
+#pragma mark - YSCoreTextAttachmentProtocol
 
 - (CGPoint)drawPoint
 {
@@ -104,10 +81,11 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
                        self.contentEdgeInsets.top + _drawPoint.y - self.contentEdgeInsets.bottom);
 }
 
+#pragma mark -
+
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"{\n\
-            %@, %@, ascent: %f, descent: %f\n}", [super description], self.object, self.ascent, self.descent];
+    return [NSString stringWithFormat:@"{ %@, object: %@, ascent: %f, descent: %f }", [super description], self.object, self.ascent, self.descent];
 }
 
 @end

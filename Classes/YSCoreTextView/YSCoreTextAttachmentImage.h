@@ -10,27 +10,17 @@
 
 @interface YSCoreTextAttachmentImage : YSCoreTextAttachment
 
-+ (YSCoreTextAttachmentImage*)appendImage:(UIImage*)image
-                                 withFont:(UIFont*)font
-                       toAttributedString:(NSMutableAttributedString*)attributedString;
-
-+ (YSCoreTextAttachmentImage*)insertImage:(UIImage*)image
-                                 withFont:(UIFont*)font
-                                  atIndex:(NSUInteger)index
-                       toAttributedString:(NSMutableAttributedString*)attributedString;
-
 - (instancetype)initWithImage:(UIImage*)image
-                         font:(UIFont*)font;
+                         font:(UIFont*)font
+               paragraphStyle:(CTParagraphStyleRef)paragraphStyle;
 
 - (instancetype)initWithImage:(UIImage*)image
                        ascent:(CGFloat)ascent
-                      descent:(CGFloat)descent;
+                      descent:(CGFloat)descent
+               paragraphStyle:(CTParagraphStyleRef)paragraphStyle;
 
 /* YSCoreTextAttachmentProtocol */
-+ (void)insertAttachment:(YSCoreTextAttachmentImage*)attachment
-                 atIndex:(NSUInteger)index
-      toAttributedString:(NSMutableAttributedString *)attributedString;
-
+@property (nonatomic, readonly) NSAttributedString *attachmentString;
 @property (nonatomic, readonly) CGFloat ascent;
 @property (nonatomic, readonly) CGFloat descent;
 @property (nonatomic, readonly) CGFloat width;
