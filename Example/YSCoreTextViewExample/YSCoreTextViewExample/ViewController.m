@@ -86,7 +86,7 @@
     CGFloat imgSize = font.ascender - font.descender;
     UIImage *img = [UIImage ys_imageFromColor:[UIColor redColor] withSize:CGSizeMake(imgSize, imgSize)];
     img = [YSImageFilter resizeWithImage:img size:img.size quality:kCGInterpolationHigh trimToFit:NO mask:YSImageFilterMaskCircle];
-    Attachment *attachment = [[Attachment alloc] initWithImage:img font:font];
+    Attachment *attachment = [[Attachment alloc] initWithImage:img font:font paragraphStyle:NULL];
     attachment.insertionIndex = insertionIndex;
     return attachment;
 }
