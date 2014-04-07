@@ -28,6 +28,4 @@
 - (id)object;
 @property (nonatomic) CGPoint drawPoint;
 
-- (NSUInteger)custumLength;
-
 @end
