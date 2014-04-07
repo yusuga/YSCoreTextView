@@ -75,7 +75,7 @@ static CGFloat RunDelegateGetWidthCallback(void *refCon)
 
 #pragma mark - YSCoreTextAttachmentProtocol required method
 
-- (NSAttributedString *)attributedString
+- (NSAttributedString *)attachmentString
 {
     abort();
 }
