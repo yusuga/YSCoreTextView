@@ -42,6 +42,7 @@ static inline CGFLOAT_TYPE CGFloat_round(CGFLOAT_TYPE cgfloat) {
 
 @property (nonatomic) CGFloat y;
 @property (nonatomic) CGFloat fontSize;
+@property (nonatomic) UIEdgeInsets textInsets;
 @property (nonatomic) UISwitch *langSwitch;
 
 @end
@@ -51,6 +52,11 @@ static inline CGFLOAT_TYPE CGFloat_round(CGFLOAT_TYPE cgfloat) {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.textInsets = UIEdgeInsetsZero;
+#if 1
+    self.textInsets = UIEdgeInsetsMake(5.f, 5.f, 5.f, 5.f);
+#endif
     
     UISlider *slider = [[UISlider alloc] initWithFrame:CGRectMake(0.f, 0.f, 200.f, 0.f)];
     [slider sizeToFit];
@@ -103,7 +109,7 @@ static inline CGFLOAT_TYPE CGFloat_round(CGFLOAT_TYPE cgfloat) {
         multiLine = @"multi line string. multi line string. multimulti line string. multi lineline string. multi line stringstring. multi multi multi line string. multi multi multi line string...string.";
         emojiSingleLine = @"one☔️line stir☔️ng";
         emojiMultiLine = @"multi☔️line string. multi l☔️ine string. multimulti line strin☔️g. multi lineline ☔️ string. multi line stringstring. multi mul☔️ti multi line string. m☔️ulti multi multi line string..☔️.string.";
-    }
+    }    
     
     [self addTextViewWithText:singleLine fontSize:self.fontSize regularExpressionPattern:@"(one)" attachments:nil];
     [self addTextViewWithText:singleLine fontSize:self.fontSize regularExpressionPattern:@"(line)" attachments:nil];
@@ -227,6 +233,15 @@ static inline CGFLOAT_TYPE CGFloat_round(CGFLOAT_TYPE cgfloat) {
    regularExpressionPattern:(NSString*)pattern
                 attachments:(NSArray*)attachments
 {
+    [self addTextViewWithText:text font:font regularExpressionPattern:pattern attachments:attachments textInsets:self.textInsets];
+}
+
+- (void)addTextViewWithText:(NSString*)text
+                       font:(UIFont*)font
+   regularExpressionPattern:(NSString*)pattern
+                attachments:(NSArray*)attachments
+                 textInsets:(UIEdgeInsets)textInsets
+{
     CGFloat x = 10.f;
     
     YSCoreTextView *textView = [[YSCoreTextView alloc] init];
@@ -254,7 +269,8 @@ static inline CGFLOAT_TYPE CGFloat_round(CGFLOAT_TYPE cgfloat) {
     
     YSCoreTextLayout *layout = [[YSCoreTextLayout alloc] initWithConstraintSize:constraintSize
                                                                attributedString:str
-                                                                       baseFont:font];
+                                                                       baseFont:font
+                                                                     textInsets:textInsets];
     
     [self addHighlightWithRegularExpressionPattern:pattern colors:[self highlightColors] toLayout:layout];
     
@@ -310,7 +326,8 @@ static inline CGFLOAT_TYPE CGFloat_round(CGFLOAT_TYPE cgfloat) {
     
     YSCoreTextLayout *layout = [[YSCoreTextLayout alloc] initWithConstraintSize:constraintSize
                                                                attributedString:str
-                                                                       baseFont:font];
+                                                                       baseFont:font
+                                                                     textInsets:self.textInsets];
     
     textView.layout = layout;
     [textView sizeToFit];
