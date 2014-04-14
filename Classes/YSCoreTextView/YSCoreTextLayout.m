@@ -203,19 +203,27 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
         CFRange lineRange = CTLineGetStringRange(line);
         NSRange intersectionRange = NSIntersectionRange(range, NSMakeRange(lineRange.location, lineRange.length));
         
-        LOG_YSCORE_TEXT_CTLINE(@"lineIdx = %@, intersectionRange = %@, %@", @(lineIdx), NSStringFromRange(intersectionRange), [self.attributedString.string substringWithRange:intersectionRange]);
+        LOG_YSCORE_TEXT_CTLINE(@"lineIdx = %@, lineRange: %@, intersectionRange = %@, %@",
+                               @(lineIdx),
+                               NSStringFromRange(NSMakeRange(lineRange.location, lineRange.length)),
+                               NSStringFromRange(intersectionRange),
+                               [self.attributedString.string substringWithRange:intersectionRange]);
         
         CGRect fragRect = CGRectZero;
         if (intersectionRange.length > 0) {
             CGFloat ascent, descent, leading;
-            double  width;
-            width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
-            
+            double  width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+            LOG_YSCORE_TEXT_CTLINE(@"width: %f, ascent: %f, descent: %f, leading: %f", width, ascent, descent, leading);
+
             CFIndex startIndex = intersectionRange.location;
             CGFloat startOffset = CTLineGetOffsetForStringIndex(line, startIndex, NULL);
             CFIndex endIndex = startIndex + intersectionRange.length;
             CGFloat endOffset = CTLineGetOffsetForStringIndex(line, endIndex, NULL);
+            if (endOffset == 0.f) {
+                endOffset = width;
+            }
             CGFloat textWidth = endOffset - startOffset;
+            LOG_YSCORE_TEXT_CTLINE(@"startOffset: %f, endOffset: %f, textWidth: %f", startOffset, endOffset, textWidth);
             fragRect.origin.x = origin.x + startOffset;
             fragRect.origin.y = origin.y - descent;
             fragRect.size.height = self.lineHeight;
