@@ -1,10 +1,16 @@
-YSCoreTextView
-======================
+#YSCoreTextView
 Simple drawing of the CoreText.
 
-License
-----------
-    Copyright &copy; 2014 Yu Sugawara (https://github.com/yusuga)
+##Acknowledgement
+参考にさせて頂いたプロジェクト
+
+[SECoreTextView](https://github.com/kishikawakatsumi/SECoreTextView)
+
+[UZTextView](https://github.com/sonsongithub/UZTextView)
+
+
+##License
+    Copyright (c) 2014 Yu Sugawara (https://github.com/yusuga)
     Licensed under the MIT License.
 
     Permission is hereby granted, free of charge, to any person obtaining a 
