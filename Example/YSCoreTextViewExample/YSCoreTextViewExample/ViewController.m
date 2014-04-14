@@ -156,7 +156,7 @@ static inline CGFLOAT_TYPE CGFloat_round(CGFLOAT_TYPE cgfloat) {
 - (Attachment*)attachmentWithFontSize:(CGFloat)fontSize insertionIndex:(NSUInteger)insertionIndex
 {
     UIFont *font = [self fontWithSize:fontSize];
-    CGFloat imgSize = font.ascender - font.descender;
+    CGFloat imgSize = [YSCoreTextAttachmentImage imageSizeFromFont:font];
     UIImage *img = [UIImage ys_imageFromColor:[UIColor redColor] withSize:CGSizeMake(imgSize, imgSize)];
     img = [YSImageFilter resizeWithImage:img size:img.size quality:kCGInterpolationHigh trimToFit:NO mask:YSImageFilterMaskCircle];
     CTParagraphStyleRef style = [self CTParagraphStyleCreateWithFont:font];
