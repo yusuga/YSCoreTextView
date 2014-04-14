@@ -19,6 +19,8 @@
                       descent:(CGFloat)descent
                paragraphStyle:(CTParagraphStyleRef)paragraphStyle;
 
++ (CGFloat)imageSizeFromFont:(UIFont*)font;
+
 /* YSCoreTextAttachmentProtocol */
 @property (nonatomic, readonly) NSAttributedString *attachmentString;
 @property (nonatomic, readonly) CGFloat ascent;

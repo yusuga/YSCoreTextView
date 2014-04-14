@@ -9,6 +9,14 @@
 #import "YSCoreTextAttachmentImage.h"
 #import "YSCoreTextConstants.h"
 
+static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
+#if defined(__LP64__) && __LP64__
+    return floor(cgfloat);
+#else
+    return floorf(cgfloat);
+#endif
+}
+
 @implementation YSCoreTextAttachmentImage
 @synthesize ascent = _ascent;
 @synthesize descent = _descent;
@@ -33,8 +41,8 @@
     if (self = [super init]) {
         _object = image;
         _width = image.size.width;
-        _ascent = ascent;
-        _descent = descent;
+        _ascent = CGFloat_floor(ascent + 0.5f);
+        _descent = CGFloat_floor(descent + 0.5f);
         
         self.contentInset = UIEdgeInsetsZero;
         self.contentEdgeInsets = UIEdgeInsetsZero;
@@ -53,6 +61,11 @@
                                                             attributes:attr];
     }
     return self;
+}
+
++ (CGFloat)imageSizeFromFont:(UIFont *)font
+{
+    return CGFloat_floor(font.ascender + 0.5f) + CGFloat_floor(-font.descender + 0.5f);
 }
 
 #pragma mark - YSCoreTextAttachmentProtocol
