@@ -30,7 +30,6 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
 @interface YSCoreTextLayout ()
 
 @property (nonatomic) NSMutableArray *attachments;
-@property (nonatomic) CGFloat lineHeight;
 @property (nonatomic) CGFloat baseLine;
 @property (nonatomic) UIEdgeInsets textContainerInset;
 
@@ -75,17 +74,19 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
                                             NULL);
         SAFE_CFRELEASE(framesetter);
         
-        self.lineHeight = CGFloat_floor((baseFont.ascender + 0.5f) + (-baseFont.descender + 0.5f));
-        // or self.lineHeight = CGFloat_floor((baseFont.ascender + (-baseFont.descender)) + 0.5f);
         self.baseLine = CGFloat_floor(-baseFont.descender + 0.5f);
         
-        LOG_YSCORE_TEXT(@"lineH1: %f, lineH2: %f, baseLine: %f, as: %f, des: %f",
-                        CGFloat_floor((baseFont.ascender + 0.5f) + (-baseFont.descender + 0.5f)),
-                        CGFloat_floor((baseFont.ascender + 0.5f) + (-baseFont.descender + 0.5f)),
-                        self.baseLine,
-                        baseFont.ascender,
-                        baseFont.descender);
-        
+        // check font sizes
+        /*
+        NSLog(@"ascender: %f, descender: %f leading: %f, capHeight: %f, xHeight: %f, lineHeight: %f", baseFont.ascender, baseFont.descender, baseFont.leading, baseFont.capHeight, baseFont.xHeight, baseFont.lineHeight);
+        NSLog(@"h1: %f, h2: %f, h3: %f, h4: %f, h5: %f",
+              CGFloat_floor(baseFont.lineHeight),
+              CGFloat_floor(baseFont.lineHeight + 0.5f),
+              CGFloat_floor(baseFont.ascender + 0.5f) + CGFloat_floor(-baseFont.descender),
+              CGFloat_floor(baseFont.ascender) + CGFloat_floor(-baseFont.descender + 0.5f),
+              CGFloat_floor(baseFont.ascender + 0.5f) + CGFloat_floor(-baseFont.descender + 0.5f));
+         */
+       
         self.highlight = [NSMutableArray array];
         self.attachments = [NSMutableArray array];                
     }
@@ -226,7 +227,7 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
             LOG_YSCORE_TEXT_CTLINE(@"startOffset: %f, endOffset: %f, textWidth: %f", startOffset, endOffset, textWidth);
             fragRect.origin.x = origin.x + startOffset;
             fragRect.origin.y = origin.y - descent;
-            fragRect.size.height = self.lineHeight;
+            fragRect.size.height = lineHeight;
             fragRect.origin.y = self.size.height - CGRectGetMaxY(fragRect);
             fragRect.size.width = textWidth;
         }
