@@ -14,6 +14,27 @@
 
 @implementation YSCoreTextView
 
+- (id)init
+{
+    if (self = [super init]) {
+        [self setup];
+    }
+    return self;
+}
+
+- (id)initWithFrame:(CGRect)frame
+{
+    if (self = [super initWithFrame:frame]) {
+        [self setup];
+    }
+    return self;
+}
+
+- (void)setup
+{
+    self.backgroundColor = [UIColor clearColor];
+}
+
 - (void)drawRect:(CGRect)dirtyRect
 {
     [self.layout drawInContext:UIGraphicsGetCurrentContext()];

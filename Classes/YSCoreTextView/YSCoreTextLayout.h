@@ -12,7 +12,13 @@
 @interface YSCoreTextLayout : NSObject
 
 - (id)initWithConstraintSize:(CGSize)constraintSize
-             attributedString:(NSAttributedString*)attributedString;
+            attributedString:(NSAttributedString*)attributedString
+                    baseFont:(UIFont*)baseFont;
+
+- (id)initWithConstraintSize:(CGSize)constraintSize
+            attributedString:(NSAttributedString*)attributedString
+                    baseFont:(UIFont*)baseFont
+          textContainerInset:(UIEdgeInsets)textContainerInset;
 
 @property (nonatomic, readonly) NSAttributedString *attributedString;
 @property (nonatomic, readonly) CTFrameRef ctframe;
@@ -21,5 +27,7 @@
 @property (nonatomic) NSMutableArray *highlight; // YSCoreTextHighlight objects
 
 - (void)drawInContext:(CGContextRef)context;
+
+- (void)setTextContainerInset:(UIEdgeInsets)inset;
 
 @end

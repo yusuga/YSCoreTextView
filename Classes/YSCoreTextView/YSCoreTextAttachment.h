@@ -10,13 +10,6 @@
 @import CoreText;
 #import "YSCoreTextAttachmentProtocol.h"
 
-/*
- Base code from SECoreTextView (https://github.com/kishikawakatsumi/SECoreTextView>
- Copyright (c) 2013 kishikawa katsumi (http://kishikawakatsumi.com/)
- All rights reserved.
- MIT license
- */
-
 @interface YSCoreTextAttachment : NSObject <YSCoreTextAttachmentProtocol>
 
 @property (nonatomic, readonly) CTRunDelegateCallbacks callbacks;

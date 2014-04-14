@@ -11,9 +11,28 @@
 #import "YSCoreTextConstants.h"
 #import "YSCoreTextAttachmentProtocol.h"
 
+static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
+#if defined(__LP64__) && __LP64__
+    return ceil(cgfloat);
+#else
+    return ceilf(cgfloat);
+#endif
+}
+
+static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
+#if defined(__LP64__) && __LP64__
+    return floor(cgfloat);
+#else
+    return floorf(cgfloat);
+#endif
+}
+
 @interface YSCoreTextLayout ()
 
 @property (nonatomic) NSMutableArray *attachments;
+@property (nonatomic) CGFloat lineHeight;
+@property (nonatomic) CGFloat baseLine;
+@property (nonatomic) UIEdgeInsets textContainerInset;
 
 @end
 
@@ -21,6 +40,18 @@
 
 - (id)initWithConstraintSize:(CGSize)constraintSize
             attributedString:(NSAttributedString*)attributedString
+                    baseFont:(UIFont*)baseFont
+{
+    return [self initWithConstraintSize:constraintSize
+                       attributedString:attributedString
+                               baseFont:baseFont
+                     textContainerInset:UIEdgeInsetsZero];
+}
+
+- (id)initWithConstraintSize:(CGSize)constraintSize
+            attributedString:(NSAttributedString*)attributedString
+                    baseFont:(UIFont*)baseFont
+          textContainerInset:(UIEdgeInsets)textContainerInset
 {
     if (self = [super init]) {
         _attributedString = attributedString;
@@ -31,6 +62,8 @@
                                                              NULL,
                                                              constraintSize,
                                                              NULL);
+        _size.width = CGFloat_ceil(_size.width);
+        _size.height += textContainerInset.top;
         LOG_YSCORE_TEXT(@"CTFramesetterSuggestFrameSize: %@", NSStringFromCGSize(_size));
         CGMutablePathRef path = CGPathCreateMutable();
         CGRect pathRect = CGRectZero;
@@ -42,8 +75,19 @@
                                             NULL);
         SAFE_CFRELEASE(framesetter);
         
+        self.lineHeight = CGFloat_floor((baseFont.ascender + 0.5f) + (-baseFont.descender + 0.5f));
+        // or self.lineHeight = CGFloat_floor((baseFont.ascender + (-baseFont.descender)) + 0.5f);
+        self.baseLine = CGFloat_floor(-baseFont.descender + 0.5f);
+        
+        LOG_YSCORE_TEXT(@"lineH1: %f, lineH2: %f, baseLine: %f, as: %f, des: %f",
+                        CGFloat_floor((baseFont.ascender + 0.5f) + (-baseFont.descender + 0.5f)),
+                        CGFloat_floor((baseFont.ascender + 0.5f) + (-baseFont.descender + 0.5f)),
+                        self.baseLine,
+                        baseFont.ascender,
+                        baseFont.descender);
+        
         self.highlight = [NSMutableArray array];
-        self.attachments = [NSMutableArray array];
+        self.attachments = [NSMutableArray array];                
     }
     return self;
 }
@@ -57,16 +101,20 @@
 {
     CFArrayRef lines = CTFrameGetLines(self.ctframe);
     CFIndex lineCount = CFArrayGetCount(lines);
-    CGPoint lineOrigins[lineCount];
-    CTFrameGetLineOrigins(self.ctframe, CFRangeMake(0, lineCount), lineOrigins);
+    LOG_YSCORE_TEXT(@"--- lineCount: %@", @(lineCount));
+    
+    /* CTFrameGetLineOrigins bug: origin.y is not right at use multiple font */
+    // CGPoint lineOrigins[lineCount];
+    // CTFrameGetLineOrigins(self.ctframe, CFRangeMake(0, lineCount), lineOrigins);
     
     NSMutableArray *attachments = [NSMutableArray array];
-    
     CGContextSaveGState(context);
     CGContextTranslateCTM(context, 0.f, self.size.height);
     CGContextScaleCTM(context, 1.f, -1.f);
+    CGFloat lineHeight = (self.size.height - self.textContainerInset.top) / lineCount;
     for (int lineIdx = 0; lineIdx < lineCount; lineIdx++) {
-        CGPoint origin = lineOrigins[lineIdx];
+        CGPoint origin = CGPointMake(0.f, lineHeight*((lineCount - 1) - lineIdx) + self.baseLine); // Workaround CTFrameGetLineOrigins bug
+        LOG_YSCORE_TEXT(@"origin: %@, self.size.height: %f", NSStringFromCGPoint(origin), self.size.height);
         CTLineRef line = CFArrayGetValueAtIndex(lines, lineIdx);
         CFArrayRef runs = CTLineGetGlyphRuns(line);
         CFIndex runCount = CFArrayGetCount(runs);
@@ -93,6 +141,7 @@
                 }
                 CFRange runRange = CTRunGetStringRange(run);
                 width = CTRunGetTypographicBounds(run, CFRangeMake(0, runRange.length), NULL, NULL, NULL);
+                //LOG_YSCORE_TEXT(@"h: %f, origin: %@, ascent: %f, descent: %f, leading: %f", self.size.height, NSStringFromCGPoint(origin), ascent, descent, leading);
                 CGContextSetTextPosition(context,
                                          origin.x + adjustX,
                                          origin.y - adjustY);
@@ -102,7 +151,8 @@
         }
     }
     CGContextRestoreGState(context);
-
+    LOG_YSCORE_TEXT(@"---");
+    
     for (id <YSCoreTextAttachmentProtocol> attachment in attachments) {
         NSAssert1([attachment respondsToSelector:@selector(object)], @"attachment = %@", attachment);
         UIImage *img = attachment.object;
@@ -117,13 +167,6 @@
 }
 
 #pragma mark - Draw highlight
-
-/*
- Base idea from UZTextView https://github.com/sonsongithub/UZTextView
- Copyright (c) 2013, sonson
- All rights reserved.
- BSD-License
-*/
 
 - (void)drawSelectedTextFragmentRectsWithRange:(NSRange)range
                                          color:(UIColor*)color
@@ -150,15 +193,12 @@
 {
 	CFArrayRef lines = CTFrameGetLines(self.ctframe);
     CFIndex lineCount = CFArrayGetCount(lines);
-    CGPoint lineOrigins[lineCount];
-    CTFrameGetLineOrigins(self.ctframe, CFRangeMake(0, 0), lineOrigins);
-	
-	NSMutableArray *fragmentRects = [NSMutableArray array];
-	
+	NSMutableArray *fragmentRects = [NSMutableArray array];	
 	NSRange range = NSMakeRange(fromIndex, toIndex - fromIndex + 1);
+    CGFloat lineHeight = (self.size.height - self.textContainerInset.top) / lineCount;
     LOG_YSCORE_TEXT_CTLINE(@"range = %@", NSStringFromRange(range));
     for (NSInteger lineIdx = 0; lineIdx < lineCount; lineIdx++) {
-        CGPoint origin = lineOrigins[lineIdx];
+        CGPoint origin = CGPointMake(0.f, lineHeight*((lineCount - 1) - lineIdx) + self.baseLine); // Workaround CTFrameGetLineOrigins bug
         CTLineRef line = CFArrayGetValueAtIndex(lines, lineIdx);
         CFRange lineRange = CTLineGetStringRange(line);
         NSRange intersectionRange = NSIntersectionRange(range, NSMakeRange(lineRange.location, lineRange.length));
@@ -178,7 +218,7 @@
             CGFloat textWidth = endOffset - startOffset;
             fragRect.origin.x = origin.x + startOffset;
             fragRect.origin.y = origin.y - descent;
-            fragRect.size.height = ascent + descent;
+            fragRect.size.height = self.lineHeight;
             fragRect.origin.y = self.size.height - CGRectGetMaxY(fragRect);
             fragRect.size.width = textWidth;
         }
