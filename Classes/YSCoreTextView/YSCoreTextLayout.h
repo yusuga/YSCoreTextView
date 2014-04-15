@@ -19,6 +19,7 @@
 @property (nonatomic, readonly) NSAttributedString *attributedString;
 @property (nonatomic, readonly) CTFrameRef ctframe;
 @property (nonatomic, readonly) CGSize size;
+@property (nonatomic, readonly) UIEdgeInsets textInsets;
 
 @property (nonatomic) NSMutableArray *highlight; // YSCoreTextHighlight objects
 

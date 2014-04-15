@@ -31,7 +31,6 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
 
 @property (nonatomic) NSMutableArray *attachments;
 @property (nonatomic) CGFloat baseLine;
-@property (nonatomic) UIEdgeInsets textInsets;
 
 @end
 
@@ -44,7 +43,7 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
 {
     if (self = [super init]) {
         _attributedString = attributedString;
-        self.textInsets = textInsets;
+        _textInsets = textInsets;
         
         constraintSize.width = constraintSize.width - textInsets.left - textInsets.right;
         
