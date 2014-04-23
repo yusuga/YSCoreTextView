@@ -63,6 +63,7 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
                                             path,
                                             NULL);
         SAFE_CFRELEASE(framesetter);
+        SAFE_CFRELEASE(path);
         
         _size.width = CGFloat_ceil(_size.width) + textInsets.left + textInsets.right;
         _size.height += textInsets.top + textInsets.bottom;
