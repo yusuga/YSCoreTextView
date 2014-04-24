@@ -14,23 +14,15 @@
 
 @implementation YSCoreTextView
 
-- (id)init
-{
-    if (self = [super init]) {
-        [self setup];
-    }
-    return self;
-}
-
 - (id)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        [self setup];
+        [self commonInit];
     }
     return self;
 }
 
-- (void)setup
+- (void)commonInit
 {
     self.backgroundColor = [UIColor clearColor];
 }
