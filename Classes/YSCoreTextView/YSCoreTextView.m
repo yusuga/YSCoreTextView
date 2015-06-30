@@ -37,4 +37,9 @@
     return self.layout.size;
 }
 
+- (CGSize)intrinsicContentSize
+{
+    return self.layout.size;
+}
+
 @end
