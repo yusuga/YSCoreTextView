@@ -10,7 +10,7 @@
 #import "YSCoreTextView.h"
 
 #import <YSUIKitAdditions/UIImage+YSUIKitAdditions.h>
-#import <YSImageFilter/YSImageFilter.h>
+#import <YSImageFilter/UIImage+YSImageFilter.h>
 
 static inline CGFLOAT_TYPE CGFloat_ceil(CGFLOAT_TYPE cgfloat) {
 #if defined(__LP64__) && __LP64__
@@ -164,7 +164,14 @@ static inline CGFLOAT_TYPE CGFloat_round(CGFLOAT_TYPE cgfloat) {
     UIFont *font = [self fontWithSize:fontSize];
     CGFloat imgSize = [YSCoreTextAttachmentImage imageSizeFromFont:font];
     UIImage *img = [UIImage ys_imageFromColor:[UIColor redColor] withSize:CGSizeMake(imgSize, imgSize)];
-    img = [YSImageFilter resizeWithImage:img size:img.size quality:kCGInterpolationHigh trimToFit:NO mask:YSImageFilterMaskCircle];
+    
+    YSImageFilter *filter = [[YSImageFilter alloc] init];
+    filter.size = img.size;
+    filter.quality = kCGInterpolationHigh;
+    filter.trimToFit = NO;
+    filter.mask = YSImageFilterMaskCircle;
+    img = [img ys_filter:filter];
+
     CTParagraphStyleRef style = [self CTParagraphStyleCreateWithFont:font];
     Attachment *attachment = [[Attachment alloc] initWithImage:img font:font paragraphStyle:style];
     if (style) {
