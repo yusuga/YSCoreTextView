@@ -27,23 +27,39 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
 #endif
 }
 
+static inline CFIndex ys_CFLineGetRunStatus(CTLineRef line, CFIndex index) {
+    CFArrayRef runs = CTLineGetGlyphRuns(line);
+    CFIndex runsCount = CFArrayGetCount(runs);
+    for (CFIndex idx = 0; idx < runsCount; idx++) {
+        CTRunRef run = CFArrayGetValueAtIndex(runs, idx);
+        CFRange range = CTRunGetStringRange(run);
+        if (NSLocationInRange(index, NSMakeRange(range.location, range.length))) {
+            return CTRunGetStatus(run);
+        }
+    }
+    return kCTRunStatusNoStatus;
+}
+
 @interface YSCoreTextLayout ()
 
-@property (nonatomic) NSMutableArray *attachments;
+@property (nonatomic, readonly) NSMutableArray *attachments;
 @property (nonatomic) CGFloat baseLine;
 
 @end
 
 @implementation YSCoreTextLayout
 
-- (id)initWithConstraintSize:(CGSize)constraintSize
-            attributedString:(NSAttributedString*)attributedString
-                    baseFont:(UIFont*)baseFont
-                  textInsets:(UIEdgeInsets)textInsets
+- (instancetype)initWithConstraintSize:(CGSize)constraintSize
+                      attributedString:(NSAttributedString*)attributedString
+                              baseFont:(UIFont*)baseFont
+                            textInsets:(UIEdgeInsets)textInsets
+                      isAlignmentRight:(BOOL)isAlignmentRight
+                      isSizeToFitWidth:(BOOL)isSizeToFitWidth
 {
     if (self = [super init]) {
         _attributedString = attributedString;
         _textInsets = textInsets;
+        _isAlignmentRight = isAlignmentRight;
         
         constraintSize.width = constraintSize.width - textInsets.left - textInsets.right;
         
@@ -53,11 +69,16 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
                                                              NULL,
                                                              constraintSize,
                                                              NULL);
+        if (!isSizeToFitWidth) {
+            _size.width = constraintSize.width;
+        }
+        
         LOG_YSCORE_TEXT(@"constraintSize: %@, CTFramesetterSuggestFrameSize: %@", NSStringFromCGSize(constraintSize), NSStringFromCGSize(_size));
         CGMutablePathRef path = CGPathCreateMutable();
         CGRect pathRect = CGRectZero;
         pathRect.size = self.size;
         CGPathAddRect(path, NULL, pathRect);
+        
         _ctframe = CTFramesetterCreateFrame(framesetter,
                                             CFRangeMake(0.f, attributedString.length),
                                             path,
@@ -73,17 +94,17 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
         
         // check font sizes
         /*
-        NSLog(@"ascender: %f, descender: %f leading: %f, capHeight: %f, xHeight: %f, lineHeight: %f", baseFont.ascender, baseFont.descender, baseFont.leading, baseFont.capHeight, baseFont.xHeight, baseFont.lineHeight);
-        NSLog(@"h1: %f, h2: %f, h3: %f, h4: %f, h5: %f",
-              CGFloat_floor(baseFont.lineHeight),
-              CGFloat_floor(baseFont.lineHeight + 0.5f),
-              CGFloat_floor(baseFont.ascender + 0.5f) + CGFloat_floor(-baseFont.descender),
-              CGFloat_floor(baseFont.ascender) + CGFloat_floor(-baseFont.descender + 0.5f),
-              CGFloat_floor(baseFont.ascender + 0.5f) + CGFloat_floor(-baseFont.descender + 0.5f));
+         NSLog(@"ascender: %f, descender: %f leading: %f, capHeight: %f, xHeight: %f, lineHeight: %f", baseFont.ascender, baseFont.descender, baseFont.leading, baseFont.capHeight, baseFont.xHeight, baseFont.lineHeight);
+         NSLog(@"h1: %f, h2: %f, h3: %f, h4: %f, h5: %f",
+         CGFloat_floor(baseFont.lineHeight),
+         CGFloat_floor(baseFont.lineHeight + 0.5f),
+         CGFloat_floor(baseFont.ascender + 0.5f) + CGFloat_floor(-baseFont.descender),
+         CGFloat_floor(baseFont.ascender) + CGFloat_floor(-baseFont.descender + 0.5f),
+         CGFloat_floor(baseFont.ascender + 0.5f) + CGFloat_floor(-baseFont.descender + 0.5f));
          */
-       
-        self.highlight = [NSMutableArray array];
-        self.attachments = [NSMutableArray array];                
+        
+        _highlight = [NSMutableArray array];
+        _attachments = [NSMutableArray array];
     }
     return self;
 }
@@ -92,6 +113,8 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
 {
     SAFE_CFRELEASE(_ctframe);
 }
+
+#pragma mark - Draw
 
 - (void)drawInContext:(CGContextRef)context
 {
@@ -106,27 +129,37 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
     CGContextSaveGState(context);
     CGContextTranslateCTM(context, 0.f, self.size.height);
     CGContextScaleCTM(context, 1.f, -1.f);
-    CGFloat lineHeight = (self.size.height - self.textInsets.top - self.textInsets.bottom) / lineCount;
-    CGFloat baseLine = self.baseLine + self.textInsets.bottom;
+    CGFloat lineHeight = [self lineHeightForLineCount:lineCount];
+    CGFloat baseLine = [self calculatedBaseLine];
     CGFloat x = self.textInsets.left;
-    LOG_YSCORE_TEXT(@"--- lineCount: %@, self.size.height: %f, textInsets: %@, lineHeight: %f",
+    
+    LOG_YSCORE_TEXT(@"--- lineCount: %@, self.size.height: %f, textInsets: %@, lineHeight: %f, isRightToLeft: %d",
                     @(lineCount),
                     self.size.height,
                     NSStringFromUIEdgeInsets(self.textInsets),
-                    lineHeight);
+                    lineHeight,
+                    isRightToLeft);
     for (int lineIdx = 0; lineIdx < lineCount; lineIdx++) {
-        CGPoint origin = CGPointMake(x, lineHeight*((lineCount - 1) - lineIdx) + baseLine); // Workaround CTFrameGetLineOrigins bug
-        LOG_YSCORE_TEXT(@"origin: %@, self.size.height: %f", NSStringFromCGPoint(origin), self.size.height);
         CTLineRef line = CFArrayGetValueAtIndex(lines, lineIdx);
         CFArrayRef runs = CTLineGetGlyphRuns(line);
         CFIndex runCount = CFArrayGetCount(runs);
+        
+        CGPoint origin = CGPointMake(x,
+                                     lineHeight*((lineCount - 1) - lineIdx) + baseLine); // Workaround: CTFrameGetLineOrigins bug
+        LOG_YSCORE_TEXT(@"origin: %@, self.size.height: %f", NSStringFromCGPoint(origin), self.size.height);
         CGFloat currentX = x;
+        
+        if (self.isAlignmentRight) {
+            origin.x += self.size.width - self.textInsets.left - self.textInsets.right - CGFloat_ceil(CGRectGetWidth(CTLineGetImageBounds(line, context)));
+        }
+        
         for (CFIndex runIdx = 0; runIdx < runCount; runIdx++) {
             CTRunRef run = CFArrayGetValueAtIndex(runs, runIdx);
             CFDictionaryRef runAttr = CTRunGetAttributes(run);
             CTRunDelegateRef runDelegate = CFDictionaryGetValue(runAttr, kCTRunDelegateAttributeName);
             id <YSCoreTextAttachmentProtocol>attachment = (__bridge id <YSCoreTextAttachmentProtocol>)CTRunDelegateGetRefCon(runDelegate);
-            double width;
+            double width = 0.;
+            
             if ([attachment respondsToSelector:@selector(drawPoint)]) {
                 CFRange runRange = CTRunGetStringRange(run);
                 CGFloat ascent, descent, leading;
@@ -164,7 +197,9 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
     }
     
     for (YSCoreTextHighlight *h in self.highlight) {
-        [self drawSelectedTextFragmentRectsWithRange:h.range color:h.color];
+        [self drawSelectedTextFragmentRectsWithRange:h.range
+                                               color:h.color
+                                             context:context];
     }
 }
 
@@ -172,6 +207,7 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
 
 - (void)drawSelectedTextFragmentRectsWithRange:(NSRange)range
                                          color:(UIColor*)color
+                                       context:(CGContextRef)context
 {
     if (range.location == NSNotFound || range.length == 0) {
         return;
@@ -179,7 +215,9 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
     NSUInteger fromIndex = range.location;
     NSUInteger toIndex = NSMaxRange(range) - 1;
     
-    NSArray *fragmentRects = [self fragmentRectsForGlyphFromIndex:fromIndex toIndex:toIndex];
+    NSArray *fragmentRects = [self fragmentRectsForGlyphFromIndex:fromIndex
+                                                          toIndex:toIndex
+                                                          context:context];
     
     LOG_YSCORE_TEXT_FRAGMENT(@"fragmentRects = %@", fragmentRects);
     
@@ -192,14 +230,16 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
 
 - (NSArray*)fragmentRectsForGlyphFromIndex:(NSUInteger)fromIndex
                                    toIndex:(NSUInteger)toIndex
+                                   context:(CGContextRef)context
 {
-	CFArrayRef lines = CTFrameGetLines(self.ctframe);
+    CFArrayRef lines = CTFrameGetLines(self.ctframe);
     CFIndex lineCount = CFArrayGetCount(lines);
-	NSMutableArray *fragmentRects = [NSMutableArray array];	
-	NSRange range = NSMakeRange(fromIndex, toIndex - fromIndex + 1);
-    CGFloat lineHeight = (self.size.height - self.textInsets.top - self.textInsets.bottom) / lineCount;
-    CGFloat baseLine = self.baseLine + self.textInsets.bottom;
+    NSMutableArray *fragmentRects = [NSMutableArray array];
+    NSRange range = NSMakeRange(fromIndex, toIndex - fromIndex + 1);
+    CGFloat lineHeight = [self lineHeightForLineCount:lineCount];
+    CGFloat baseLine = [self calculatedBaseLine];
     CGFloat x = self.textInsets.left;
+    
     LOG_YSCORE_TEXT_FRAGMENT(@"range = %@", NSStringFromRange(range));
     for (NSInteger lineIdx = 0; lineIdx < lineCount; lineIdx++) {
         CGPoint origin = CGPointMake(x,
@@ -208,25 +248,133 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
         CFRange lineRange = CTLineGetStringRange(line);
         NSRange intersectionRange = NSIntersectionRange(range, NSMakeRange(lineRange.location, lineRange.length));
         
+        if (self.isAlignmentRight) {
+            origin.x += self.size.width - self.textInsets.left - self.textInsets.right - CGRectGetWidth(CTLineGetImageBounds(line, context));
+        }
+        
         LOG_YSCORE_TEXT_FRAGMENT(@"lineIdx = %@, lineRange: %@, intersectionRange = %@, %@",
-                               @(lineIdx),
-                               NSStringFromRange(NSMakeRange(lineRange.location, lineRange.length)),
-                               NSStringFromRange(intersectionRange),
-                               [self.attributedString.string substringWithRange:intersectionRange]);
+                                 @(lineIdx),
+                                 NSStringFromRange(NSMakeRange(lineRange.location, lineRange.length)),
+                                 NSStringFromRange(intersectionRange),
+                                 [self.attributedString.string substringWithRange:intersectionRange]);
         
         CGRect fragRect = CGRectZero;
         if (intersectionRange.length > 0) {
             CGFloat ascent, descent, leading;
-            double  width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+            double width = CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
             LOG_YSCORE_TEXT_FRAGMENT(@"width: %f, ascent: %f, descent: %f, leading: %f", width, ascent, descent, leading);
-
-            CFIndex startIndex = intersectionRange.location;
-            CGFloat startOffset = CTLineGetOffsetForStringIndex(line, startIndex, NULL);
-            CFIndex endIndex = startIndex + intersectionRange.length;
-            CGFloat endOffset = CTLineGetOffsetForStringIndex(line, endIndex, NULL);
+            
+#if 0
+#warning debug log enabled
+            NSLog(@"{\nline:\n'%@'\n(%@)\ntext:\n'%@'\n(%@)\n}", [self.attributedString.string substringWithRange:NSMakeRange(lineRange.location, lineRange.length)], NSStringFromRange(NSMakeRange(lineRange.location, lineRange.length)), [self.attributedString.string substringWithRange:NSMakeRange(intersectionRange.location, intersectionRange.length)], NSStringFromRange(NSMakeRange(intersectionRange.location, intersectionRange.length)));
+            for (NSUInteger i = lineRange.location; i < lineRange.length; i++) {
+                CGFloat secondaryOffset = 0.;
+                CGFloat offset = CTLineGetOffsetForStringIndex(line, i, &secondaryOffset);
+                NSLog(@"%zd: %f, %f, %@", i, offset, secondaryOffset, [self.attributedString.string substringWithRange:NSMakeRange(i, 1)]);
+            }
+            {
+                CFArrayRef runs = CTLineGetGlyphRuns(line);
+                CFIndex runsCount = CFArrayGetCount(runs);
+                for (CFIndex idx = 0; idx < runsCount; idx++) {
+                    CTRunRef run = CFArrayGetValueAtIndex(runs, idx);
+                    CFRange range = CTRunGetStringRange(run);
+                    NSLog(@"run: %@ (%@)", [self.attributedString.string substringWithRange:NSMakeRange(range.location, range.length)], NSStringFromRange(NSMakeRange(range.location, range.length)));
+                }
+            }
+#endif
+            
+            CGFloat startOffset = 0.;
+            CGFloat endOffset = 0.;
+            
+            BOOL isRightToLeft = ys_CFLineGetRunStatus(line, intersectionRange.location) & kCTRunStatusRightToLeft;
+            
+            CGFloat startSecondaryOffset = 0.;
+            startOffset = CTLineGetOffsetForStringIndex(line, intersectionRange.location, &startSecondaryOffset);
+            if (startOffset == startSecondaryOffset) {
+                CFIndex intersectionEndIndex = intersectionRange.location + intersectionRange.length;
+                CGFloat endSecondaryOffset = 0.;
+                endOffset = CTLineGetOffsetForStringIndex(line, intersectionEndIndex, &endSecondaryOffset);
+                
+                if (endOffset == endSecondaryOffset) {
+                    if (isRightToLeft) {
+                        CGFloat swap = endOffset;
+                        endOffset = startOffset;
+                        startOffset = swap;
+                    }
+                } else {
+                    if (isRightToLeft) {
+                        CFIndex rightToLeftStartIndex = -1;
+                        for (CFIndex idx = intersectionEndIndex - 1; idx >= lineRange.location; idx--) {
+                            CGFloat secondaryOffset = 0.;
+                            CGFloat offset = CTLineGetOffsetForStringIndex(line, idx, &secondaryOffset);
+                            if (offset != secondaryOffset) {
+                                rightToLeftStartIndex = idx;
+                                break;
+                            }
+                        }
+                        if (rightToLeftStartIndex == -1) {
+                            endOffset = endSecondaryOffset;
+                        } else {
+                            if (rightToLeftStartIndex < intersectionRange.location) {
+                                CGFloat swap = endOffset;
+                                endOffset = startOffset;
+                                startOffset = swap;
+                            } else {
+                                CFIndex startIndex = rightToLeftStartIndex + intersectionRange.length;
+                                startOffset = CTLineGetOffsetForStringIndex(line, startIndex, NULL);
+                                endOffset = endSecondaryOffset;
+                            }
+                        }
+                    } else {
+                        endOffset = endSecondaryOffset;
+                    }
+                }
+            } else {
+                CFIndex intersectionEndIndex = intersectionRange.location + intersectionRange.length;
+                
+                if (isRightToLeft) {
+                    CFIndex rightToLeftEndIndex = lineRange.location + lineRange.length;
+                    for (CFIndex idx = intersectionEndIndex; idx < lineRange.location + lineRange.length; idx++) {
+                        CGFloat secondaryOffset = 0.;
+                        CGFloat offset = CTLineGetOffsetForStringIndex(line, idx, &secondaryOffset);
+                        if (offset != secondaryOffset) {
+                            rightToLeftEndIndex = idx;
+                            break;
+                        }
+                    }
+                    
+                    if (rightToLeftEndIndex == lineRange.location + lineRange.length) {
+                        CFIndex intersectionStartIndex = intersectionRange.location + intersectionRange.length;
+                        
+                        startOffset = CTLineGetOffsetForStringIndex(line, intersectionStartIndex, NULL);
+                        endOffset = startSecondaryOffset;
+                    } else {
+                        CFIndex intersectionEndIndex = rightToLeftEndIndex - intersectionRange.length;
+                        
+                        CGFloat endSecondaryOffset;
+                        endOffset = CTLineGetOffsetForStringIndex(line, intersectionEndIndex, &endSecondaryOffset);
+                        if (endOffset == endSecondaryOffset) {
+                            endOffset = startSecondaryOffset;
+                            startOffset = CTLineGetOffsetForStringIndex(line, intersectionRange.location + intersectionRange.length, NULL);
+                        } else {
+                            endOffset = endSecondaryOffset;
+                        }
+                    }
+                } else {
+                    CGFloat endSecondaryOffset;
+                    endOffset = CTLineGetOffsetForStringIndex(line, intersectionEndIndex, &endSecondaryOffset);
+                    if (endOffset == endSecondaryOffset) {
+                        endOffset = CTLineGetOffsetForStringIndex(line, intersectionEndIndex, NULL);
+                    } else {
+                        endOffset = startSecondaryOffset;
+                    }
+                }
+            }
+            
             if (endOffset == 0.f) {
                 endOffset = width;
             }
+            
             CGFloat textWidth = endOffset - startOffset;
             LOG_YSCORE_TEXT_FRAGMENT(@"startOffset: %f, endOffset: %f, textWidth: %f", startOffset, endOffset, textWidth);
             fragRect.origin.x = origin.x + startOffset;
@@ -246,7 +394,19 @@ static inline CGFLOAT_TYPE CGFloat_floor(CGFLOAT_TYPE cgfloat) {
             }
         }
     }
-	return [NSArray arrayWithArray:fragmentRects];
+    return [NSArray arrayWithArray:fragmentRects];
+}
+
+#pragma mark - Util
+
+- (CGFloat)lineHeightForLineCount:(CFIndex)lineCount
+{
+    return (self.size.height - self.textInsets.top - self.textInsets.bottom) / lineCount;
+}
+
+- (CGFloat)calculatedBaseLine
+{
+    return self.baseLine + self.textInsets.bottom;
 }
 
 @end

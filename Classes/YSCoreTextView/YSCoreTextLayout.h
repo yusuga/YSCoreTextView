@@ -11,18 +11,28 @@
 
 @interface YSCoreTextLayout : NSObject
 
-- (id)initWithConstraintSize:(CGSize)constraintSize
-            attributedString:(NSAttributedString*)attributedString
-                    baseFont:(UIFont*)baseFont
-                  textInsets:(UIEdgeInsets)textInsets;
+- (instancetype)initWithConstraintSize:(CGSize)constraintSize
+                      attributedString:(NSAttributedString*)attributedString
+                              baseFont:(UIFont*)baseFont
+                            textInsets:(UIEdgeInsets)textInsets
+                      isAlignmentRight:(BOOL)isAlignmentRight
+                      isSizeToFitWidth:(BOOL)isSizeToFitWidth;
 
 @property (nonatomic, readonly) NSAttributedString *attributedString;
 @property (nonatomic, readonly) CTFrameRef ctframe;
 @property (nonatomic, readonly) CGSize size;
 @property (nonatomic, readonly) UIEdgeInsets textInsets;
+@property (nonatomic, readonly) BOOL isAlignmentRight;
 
-@property (nonatomic) NSMutableArray *highlight; // YSCoreTextHighlight objects
+@property (nonatomic, readonly) NSMutableArray *highlight; // YSCoreTextHighlight objects
 
 - (void)drawInContext:(CGContextRef)context;
+
+///-----------
+/// @name Util
+///-----------
+
+- (CGFloat)lineHeightForLineCount:(CFIndex)lineCount;
+- (CGFloat)calculatedBaseLine;
 
 @end

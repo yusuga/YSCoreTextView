@@ -109,13 +109,14 @@ static inline CGFLOAT_TYPE CGFloat_round(CGFLOAT_TYPE cgfloat) {
         multiLine = @"multi line string. multi line string. multimulti line string. multi lineline string. multi line stringstring. multi multi multi line string. multi multi multi line string...string.";
         emojiSingleLine = @"one☔️line stir☔️ng";
         emojiMultiLine = @"multi☔️line string. multi l☔️ine string. multimulti line strin☔️g. multi lineline ☔️ string. multi line stringstring. multi mul☔️ti multi line string. m☔️ulti multi multi line string..☔️.string.";
-    }    
+    }
     
+#if 1
     [self addTextViewWithText:singleLine fontSize:self.fontSize regularExpressionPattern:@"(one)" attachments:nil];
     [self addTextViewWithText:singleLine fontSize:self.fontSize regularExpressionPattern:@"(line)" attachments:nil];
-    [self addTextViewWithText:singleLine fontSize:self.fontSize regularExpressionPattern:@"(hli)" attachments:nil];
+    [self addTextViewWithText:singleLine fontSize:self.fontSize regularExpressionPattern:@"(line string)" attachments:nil];
     
-    [self addTextViewWithText:multiLine fontSize:self.fontSize regularExpressionPattern:@"(line high)" attachments:nil];
+    [self addTextViewWithText:multiLine fontSize:self.fontSize regularExpressionPattern:@"(line string)" attachments:nil];
     
     [self addTextViewWithText:singleLine
                      fontSize:self.fontSize
@@ -149,8 +150,204 @@ static inline CGFLOAT_TYPE CGFloat_round(CGFLOAT_TYPE cgfloat) {
     [self addTextViewWithText:emojiSingleLine fontSize:self.fontSize regularExpressionPattern:@"(line)" attachments:nil];
     [self addTextViewWithText:emojiMultiLine fontSize:self.fontSize regularExpressionPattern:@"(multi)" attachments:nil];
     
+    [self addTextViewWithText:emojiMultiLine
+                         font:[self fontWithSize:self.fontSize]
+     regularExpressionPattern:@"(multi)"
+                  attachments:nil
+                   textInsets:UIEdgeInsetsMake(50., 50., 50., 50.)];
+    
+    
     [self addMultiFontTextView:YES];
     [self addMultiFontTextView:NO]; // have to use the textContainerInset of YSCoreTextLayout
+#endif
+    
+    
+    for (NSUInteger i = 0; i < 2; i++) {
+        BOOL isAlignmentRight = i != 0;
+#if 1
+        // Arabic only
+#if 1
+        [self addTextViewWithText:@"ما فائدته ؟"
+                         fontSize:self.fontSize
+         regularExpressionPattern:@"(فائدته)"
+                      attachments:nil
+                 isAlignmentRight:isAlignmentRight];
+        [self addTextViewWithText:@"ما فائدته ؟ ما فائدته ؟"
+                         fontSize:self.fontSize
+         regularExpressionPattern:@"(فائدته)"
+                      attachments:nil
+                 isAlignmentRight:isAlignmentRight];
+        [self addTextViewWithText:@"ما فائدته ؟"
+                         fontSize:self.fontSize
+         regularExpressionPattern:@"(ما فائدته ؟)"
+                      attachments:nil
+                 isAlignmentRight:isAlignmentRight];
+        [self addTextViewWithText:@"ما فائدته ؟ ما فائدته ؟"
+                         fontSize:self.fontSize
+         regularExpressionPattern:@"(ما فائدته ؟)"
+                      attachments:nil
+                 isAlignmentRight:isAlignmentRight];
+#endif
+        
+        // Arabic + Alphabet
+#if 1
+        [self addTextViewWithText:@"ما فائدته ؟ lorem"
+                         fontSize:self.fontSize
+         regularExpressionPattern:@"(lorem)"
+                      attachments:nil
+                 isAlignmentRight:isAlignmentRight];
+        [self addTextViewWithText:@"ما فائدته ؟ lorem"
+                         fontSize:self.fontSize
+         regularExpressionPattern:@"(فائدته)"
+                      attachments:nil
+                 isAlignmentRight:isAlignmentRight];
+        [self addTextViewWithText:@"ما فائدته ؟ lorem"
+                         fontSize:self.fontSize
+         regularExpressionPattern:@"(ما فائدته ؟)"
+                      attachments:nil
+                 isAlignmentRight:isAlignmentRight];
+#endif
+        
+        // Alphabet + Arabic
+#if 1
+        [self addTextViewWithText:@"lorem ما فائدته ؟"
+                         fontSize:self.fontSize
+         regularExpressionPattern:@"(lorem)"
+                      attachments:nil
+                 isAlignmentRight:isAlignmentRight];
+        [self addTextViewWithText:@"lorem ما فائدته ؟"
+                         fontSize:self.fontSize
+         regularExpressionPattern:@"(فائدته)"
+                      attachments:nil
+                 isAlignmentRight:isAlignmentRight];
+        [self addTextViewWithText:@"lorem ما فائدته ؟"
+                         fontSize:self.fontSize
+         regularExpressionPattern:@"(ما فائدته ؟)"
+                      attachments:nil
+                 isAlignmentRight:isAlignmentRight];
+#endif
+        
+        // Arabic*3
+#if 1
+        {
+            YSCoreTextLayout *layout = [self addTextViewWithText:@"إيبسوم لأنها تعطي"
+                                                        fontSize:self.fontSize
+                                        regularExpressionPattern:nil
+                                                     attachments:nil
+                                                isAlignmentRight:isAlignmentRight];
+            [self addHighlightWithRegularExpressionPattern:@"(تعطي)" colors:[self highlightColors] toLayout:layout];
+            [self addHighlightWithRegularExpressionPattern:@"(لأنها)" colors:[self highlightColors] toLayout:layout];
+            [self addHighlightWithRegularExpressionPattern:@"(إيبسوم)" colors:[self highlightColors] toLayout:layout];
+        }
+        
+        {
+            YSCoreTextLayout *layout = [self addTextViewWithText:@"إيبسوم لأنها تعطي a"
+                                                        fontSize:self.fontSize
+                                        regularExpressionPattern:nil
+                                                     attachments:nil
+                                                isAlignmentRight:isAlignmentRight];
+            [self addHighlightWithRegularExpressionPattern:@"(تعطي)" colors:[self highlightColors] toLayout:layout];
+            [self addHighlightWithRegularExpressionPattern:@"(لأنها)" colors:[self highlightColors] toLayout:layout];
+            [self addHighlightWithRegularExpressionPattern:@"(إيبسوم)" colors:[self highlightColors] toLayout:layout];
+        }
+        {
+            YSCoreTextLayout *layout = [self addTextViewWithText:@"a إيبسوم لأنها تعطي"
+                                                        fontSize:self.fontSize
+                                        regularExpressionPattern:nil
+                                                     attachments:nil
+                                                isAlignmentRight:isAlignmentRight];
+            [self addHighlightWithRegularExpressionPattern:@"(تعطي)" colors:[self highlightColors] toLayout:layout];
+            [self addHighlightWithRegularExpressionPattern:@"(لأنها)" colors:[self highlightColors] toLayout:layout];
+            [self addHighlightWithRegularExpressionPattern:@"(إيبسوم)" colors:[self highlightColors] toLayout:layout];
+        }
+        {
+            YSCoreTextLayout *layout = [self addTextViewWithText:@"a إيبسوم لأنها تعطي a"
+                                                        fontSize:self.fontSize
+                                        regularExpressionPattern:nil
+                                                     attachments:nil
+                                                isAlignmentRight:isAlignmentRight];
+            [self addHighlightWithRegularExpressionPattern:@"(تعطي)" colors:[self highlightColors] toLayout:layout];
+            [self addHighlightWithRegularExpressionPattern:@"(لأنها)" colors:[self highlightColors] toLayout:layout];
+            [self addHighlightWithRegularExpressionPattern:@"(إيبسوم)" colors:[self highlightColors] toLayout:layout];
+        }
+#endif
+        
+        // Alphabet + Arabic + Alphabet
+#if 1
+        [self addTextViewWithText:@"ما lorem فائدته ؟"
+                         fontSize:self.fontSize
+         regularExpressionPattern:@"(lorem)"
+                      attachments:nil
+                 isAlignmentRight:isAlignmentRight];
+#endif
+        
+        // Arabic + Alphabet + Arabic
+#if 1
+        [self addTextViewWithText:@"lo ما فائدته ؟ rem"
+                         fontSize:self.fontSize
+         regularExpressionPattern:@"(ما فائدته ؟)"
+                      attachments:nil
+                 isAlignmentRight:isAlignmentRight];
+#endif
+        
+        // Alphabet*2 + Arabic*2 + Alphabet*2
+#if 1
+        [self addTextViewWithText:@"lorem lorem ما فائدته ؟ ما فائدته ؟ lorem lorem"
+                         fontSize:self.fontSize
+         regularExpressionPattern:@"(lorem)"
+                      attachments:nil
+                 isAlignmentRight:isAlignmentRight];
+        [self addTextViewWithText:@"lorem lorem ما فائدته ؟ ما فائدته ؟ lorem lorem"
+                         fontSize:self.fontSize
+         regularExpressionPattern:@"(فائدته)"
+                      attachments:nil
+                 isAlignmentRight:isAlignmentRight];
+        [self addTextViewWithText:@"lorem lorem ما فائدته ؟ ما فائدته ؟ lorem lorem"
+                         fontSize:self.fontSize
+         regularExpressionPattern:@"(ما فائدته ؟)"
+                      attachments:nil
+                 isAlignmentRight:isAlignmentRight];
+#endif
+        
+        // Arabic*2 + Alphabet*2 + Arabic*2
+#if 1
+        [self addTextViewWithText:@"ما فائدته ؟ ما فائدته ؟ lorem lorem ما فائدته ؟ ما فائدته ؟"
+                         fontSize:self.fontSize
+         regularExpressionPattern:@"(lorem)"
+                      attachments:nil
+                 isAlignmentRight:isAlignmentRight];
+        [self addTextViewWithText:@"ما فائدته ؟ ما فائدته ؟ lorem lorem ما فائدته ؟ ما فائدته ؟"
+                         fontSize:self.fontSize
+         regularExpressionPattern:@"(فائدته)"
+                      attachments:nil
+                 isAlignmentRight:isAlignmentRight];
+        [self addTextViewWithText:@"ما فائدته ؟ ما فائدته ؟ lorem lorem ما فائدته ؟ ما فائدته ؟"
+                         fontSize:self.fontSize
+         regularExpressionPattern:@"(ما فائدته ؟)"
+                      attachments:nil
+                 isAlignmentRight:isAlignmentRight];
+#endif
+        
+        // Long arabic + Alphabet
+#if 1
+        [self addTextViewWithText:@"هناك حقيقة مثبتة منذ زمن طويل وهي أن المحتوى المقروء لصفحة ما سيلهي القارئ عن التركيز على الشكل الخارجي للنص أو شكل توضع الفقرات في الصفحة التي يقرأها. ولذلك يتم استخدام طريقة لوريم إيبسوم لأنها تعطي توزيعاَ طبيعياَ -إلى حد ما- للأحرف عوضاً عن استخدام \"هنا يوجد محتوى نصي، هنا يوجد محتوى نصي\" فتجعلها تبدو (أي الأحرف) وكأنها نص مقروء. العديد من برامح النشر المكتبي وبرامح تحرير صفحات الويب تستخدم لوريم إيبسوم بشكل إفتراضي كنموذج عن النص، وإذا قمت بإدخال \"lorem ipsum\" في أي محرك بحث ستظهر العديد من المواقع الحديثة العهد في نتائج البحث. على مدى السنين ظهرت نسخ جديدة ومختلفة من نص لوريم إيبسوم، أحياناً عن طريق الصدفة، وأحياناً عن عمد كإدخال بعض العبارات الفكاهية إليها."
+                         fontSize:self.fontSize
+         regularExpressionPattern:@"(lorem ipsum)"
+                      attachments:nil
+                 isAlignmentRight:isAlignmentRight];
+#endif
+        
+        // Long Alphabet + Arabic
+#if 1
+        [self addTextViewWithText:@"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, ما فائدته ؟ when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+                         fontSize:self.fontSize
+         regularExpressionPattern:@"(ما فائدته ؟)"
+                      attachments:nil
+                 isAlignmentRight:isAlignmentRight];
+#endif
+        
+#endif
+    }
     
     CGRect frame = self.contentView.frame;
     frame.size.height = self.y;
@@ -171,7 +368,7 @@ static inline CGFLOAT_TYPE CGFloat_round(CGFLOAT_TYPE cgfloat) {
     filter.trimToFit = NO;
     filter.mask = YSImageFilterMaskCircle;
     img = [img ys_filter:filter];
-
+    
     CTParagraphStyleRef style = [self CTParagraphStyleCreateWithFont:font];
     Attachment *attachment = [[Attachment alloc] initWithImage:img font:font paragraphStyle:style];
     if (style) {
@@ -183,7 +380,7 @@ static inline CGFLOAT_TYPE CGFloat_round(CGFLOAT_TYPE cgfloat) {
 
 - (UIFont*)fontWithSize:(CGFloat)size
 {
-//    return [UIFont fontWithName:@"AcademyEngravedLetPlain" size:size];
+    //    return [UIFont fontWithName:@"AcademyEngravedLetPlain" size:size];
     return [UIFont systemFontOfSize:size];
 }
 
@@ -193,9 +390,9 @@ static inline CGFLOAT_TYPE CGFloat_round(CGFLOAT_TYPE cgfloat) {
     
     NSString *text = layout.attributedString.string;
     NSRegularExpression *reg = [NSRegularExpression regularExpressionWithPattern:pattern
-																		 options:0
-																		   error:nil];
-	NSArray *array = [reg matchesInString:text options:0 range:NSMakeRange(0, text.length)];
+                                                                         options:0
+                                                                           error:nil];
+    NSArray *array = [reg matchesInString:text options:0 range:NSMakeRange(0, text.length)];
     NSMutableArray *highlight = [NSMutableArray arrayWithCapacity:[array count]];
     for (NSTextCheckingResult *result in array) {
         for (int i = 1; i < [result numberOfRanges]; i++) {
@@ -205,7 +402,8 @@ static inline CGFLOAT_TYPE CGFloat_round(CGFLOAT_TYPE cgfloat) {
             }
         }
     }
-    layout.highlight = highlight;
+    
+    [layout.highlight addObjectsFromArray:highlight];
 }
 
 - (NSArray*)highlightColors
@@ -224,30 +422,63 @@ static inline CGFLOAT_TYPE CGFloat_round(CGFLOAT_TYPE cgfloat) {
     return CTParagraphStyleCreate(setting, sizeof(setting) / sizeof(CTParagraphStyleSetting));
 }
 
-- (void)addTextViewWithText:(NSString*)text
-                   fontSize:(CGFloat)fontSize
-   regularExpressionPattern:(NSString*)pattern
-                attachments:(NSArray*)attachments
+- (YSCoreTextLayout *)addTextViewWithText:(NSString*)text
+                                 fontSize:(CGFloat)fontSize
+                 regularExpressionPattern:(NSString*)pattern
+                              attachments:(NSArray*)attachments
 {
-    [self addTextViewWithText:text
-                         font:[self fontWithSize:fontSize]
-     regularExpressionPattern:pattern
-                  attachments:attachments];
+    return [self addTextViewWithText:text
+                                font:[self fontWithSize:fontSize]
+            regularExpressionPattern:pattern
+                         attachments:attachments];
 }
 
-- (void)addTextViewWithText:(NSString*)text
-                       font:(UIFont*)font
-   regularExpressionPattern:(NSString*)pattern
-                attachments:(NSArray*)attachments
+- (YSCoreTextLayout *)addTextViewWithText:(NSString*)text
+                                 fontSize:(CGFloat)fontSize
+                 regularExpressionPattern:(NSString*)pattern
+                              attachments:(NSArray*)attachments
+                         isAlignmentRight:(BOOL)isAlignmentRight
 {
-    [self addTextViewWithText:text font:font regularExpressionPattern:pattern attachments:attachments textInsets:self.textInsets];
+    return [self addTextViewWithText:text
+                                font:[self fontWithSize:fontSize]
+            regularExpressionPattern:pattern
+                         attachments:attachments
+                          textInsets:self.textInsets
+                    isAlignmentRight:isAlignmentRight];
 }
 
-- (void)addTextViewWithText:(NSString*)text
-                       font:(UIFont*)font
-   regularExpressionPattern:(NSString*)pattern
-                attachments:(NSArray*)attachments
-                 textInsets:(UIEdgeInsets)textInsets
+- (YSCoreTextLayout *)addTextViewWithText:(NSString*)text
+                                     font:(UIFont*)font
+                 regularExpressionPattern:(NSString*)pattern
+                              attachments:(NSArray*)attachments
+{
+    return [self addTextViewWithText:text
+                                font:font
+            regularExpressionPattern:pattern
+                         attachments:attachments
+                          textInsets:self.textInsets];
+}
+
+- (YSCoreTextLayout *)addTextViewWithText:(NSString*)text
+                                     font:(UIFont*)font
+                 regularExpressionPattern:(NSString*)pattern
+                              attachments:(NSArray*)attachments
+                               textInsets:(UIEdgeInsets)textInsets
+{
+    return [self addTextViewWithText:text
+                                font:font
+            regularExpressionPattern:pattern
+                         attachments:attachments
+                          textInsets:textInsets
+                    isAlignmentRight:NO];
+}
+
+- (YSCoreTextLayout *)addTextViewWithText:(NSString*)text
+                                     font:(UIFont*)font
+                 regularExpressionPattern:(NSString*)pattern
+                              attachments:(NSArray*)attachments
+                               textInsets:(UIEdgeInsets)textInsets
+                         isAlignmentRight:(BOOL)isAlignmentRight
 {
     CGFloat x = 10.f;
     
@@ -277,7 +508,9 @@ static inline CGFLOAT_TYPE CGFloat_round(CGFLOAT_TYPE cgfloat) {
     YSCoreTextLayout *layout = [[YSCoreTextLayout alloc] initWithConstraintSize:constraintSize
                                                                attributedString:str
                                                                        baseFont:font
-                                                                     textInsets:textInsets];
+                                                                     textInsets:textInsets
+                                                               isAlignmentRight:isAlignmentRight
+                                                               isSizeToFitWidth:NO];
     
     [self addHighlightWithRegularExpressionPattern:pattern colors:[self highlightColors] toLayout:layout];
     
@@ -290,6 +523,8 @@ static inline CGFLOAT_TYPE CGFloat_round(CGFLOAT_TYPE cgfloat) {
     textView.frame = frame;
     
     self.y = CGRectGetMaxY(textView.frame) + 10.f;
+    
+    return layout;
 }
 
 - (void)addMultiFontTextView:(BOOL)systemFontAtFirst
@@ -334,7 +569,9 @@ static inline CGFLOAT_TYPE CGFloat_round(CGFLOAT_TYPE cgfloat) {
     YSCoreTextLayout *layout = [[YSCoreTextLayout alloc] initWithConstraintSize:constraintSize
                                                                attributedString:str
                                                                        baseFont:font
-                                                                     textInsets:self.textInsets];
+                                                                     textInsets:self.textInsets
+                                                               isAlignmentRight:NO
+                                                               isSizeToFitWidth:NO];
     
     textView.layout = layout;
     [textView sizeToFit];
